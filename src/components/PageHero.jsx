@@ -1,7 +1,7 @@
 export default function PageHero({ eyebrow, title, intro }) {
   return (
     <section className="bg-gradient-to-br from-primary to-accent">
-      <div className="container-page py-20 text-center sm:py-28">
+      <div className="container-page pb-20 pt-32 text-center sm:pb-28 sm:pt-40">
         {eyebrow && (
           <p className="text-xs font-semibold uppercase tracking-[0.2em] text-accent-light">
             {eyebrow}
