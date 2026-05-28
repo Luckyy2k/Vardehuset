@@ -1,0 +1,150 @@
+import { useState } from 'react'
+import { Link } from 'react-router-dom'
+import { supabase, isSupabaseConfigured } from '../../lib/supabase'
+import { useSession } from '../../lib/useSession'
+import Login from './Login'
+import CalendarAdmin from './CalendarAdmin'
+import InquiriesAdmin from './InquiriesAdmin'
+import CollectionAdmin from './CollectionAdmin'
+
+const SECTIONS = [
+  { key: 'kalender', label: 'Kalender' },
+  { key: 'foresporsler', label: 'Forespørsler' },
+  { key: 'konserter', label: 'Konserter' },
+  { key: 'styret', label: 'Styret' },
+  { key: 'sponsorer', label: 'Sponsorer' },
+  { key: 'medlemmer', label: 'Medlemmer' },
+]
+
+function Section({ active }) {
+  switch (active) {
+    case 'kalender':
+      return <CalendarAdmin />
+    case 'foresporsler':
+      return <InquiriesAdmin />
+    case 'konserter':
+      return (
+        <CollectionAdmin
+          table="concerts"
+          title="Konserter"
+          orderBy="date"
+          fields={[
+            { key: 'title', label: 'Tittel' },
+            { key: 'date', label: 'Dato', type: 'date' },
+            { key: 'venue', label: 'Sted' },
+            { key: 'description', label: 'Beskrivelse', type: 'textarea' },
+          ]}
+        />
+      )
+    case 'styret':
+      return (
+        <CollectionAdmin
+          table="board_members"
+          title="Styret"
+          fields={[
+            { key: 'name', label: 'Navn' },
+            { key: 'role', label: 'Rolle' },
+            { key: 'phone', label: 'Telefon' },
+          ]}
+        />
+      )
+    case 'sponsorer':
+      return (
+        <CollectionAdmin
+          table="sponsors"
+          title="Sponsorer"
+          fields={[{ key: 'name', label: 'Navn' }]}
+        />
+      )
+    case 'medlemmer':
+      return (
+        <CollectionAdmin
+          table="members"
+          title="Medlemmer"
+          fields={[
+            { key: 'name', label: 'Navn' },
+            {
+              key: 'voice',
+              label: 'Stemmegruppe',
+              type: 'select',
+              options: ['Dirigent', '1T', '2T', '1B', '2B'],
+            },
+            { key: 'img', label: 'Bilde (URL)' },
+          ]}
+        />
+      )
+    default:
+      return null
+  }
+}
+
+export default function Admin() {
+  const { session, loading } = useSession()
+  const [active, setActive] = useState('kalender')
+
+  if (!isSupabaseConfigured) {
+    return (
+      <div className="grid min-h-svh place-items-center bg-warm px-5 text-center">
+        <div>
+          <h1 className="text-2xl">Admin er ikke tilgjengelig</h1>
+          <p className="mt-3 text-ink-light">
+            Supabase er ikke konfigurert. Legg inn miljøvariabler for å bruke admin.
+          </p>
+          <Link to="/" className="mt-6 inline-block text-accent hover:underline">
+            Til forsiden
+          </Link>
+        </div>
+      </div>
+    )
+  }
+
+  if (loading)
+    return <div className="grid min-h-svh place-items-center text-ink-light">Laster…</div>
+
+  if (!session) return <Login />
+
+  return (
+    <div className="min-h-svh bg-warm">
+      <header className="border-b border-primary/10 bg-white">
+        <div className="container-page flex items-center justify-between py-4">
+          <div>
+            <p className="text-xs uppercase tracking-[0.2em] text-accent">Admin</p>
+            <p className="font-semibold text-primary">Kulturhuset Varde</p>
+          </div>
+          <div className="flex items-center gap-4 text-sm">
+            <Link to="/" className="text-ink-light hover:text-accent">
+              Se nettsiden
+            </Link>
+            <button
+              onClick={() => supabase.auth.signOut()}
+              className="rounded-full border border-primary/20 px-4 py-1.5 text-primary hover:bg-warm"
+            >
+              Logg ut
+            </button>
+          </div>
+        </div>
+      </header>
+
+      <div className="container-page grid gap-8 py-10 lg:grid-cols-[200px_1fr]">
+        <nav className="flex gap-2 overflow-x-auto lg:flex-col">
+          {SECTIONS.map((s) => (
+            <button
+              key={s.key}
+              onClick={() => setActive(s.key)}
+              className={`whitespace-nowrap rounded-lg px-4 py-2 text-left text-sm transition ${
+                active === s.key
+                  ? 'bg-accent text-white'
+                  : 'text-ink-light hover:bg-white'
+              }`}
+            >
+              {s.label}
+            </button>
+          ))}
+        </nav>
+        <div>
+          <Section active={active} />
+        </div>
+      </div>
+    </div>
+  )
+}
