@@ -1,9 +1,12 @@
 import PageHero from '../components/PageHero'
 import SectionHeading from '../components/SectionHeading'
 import CTASection from '../components/CTASection'
-import { highlights, rooms, practical } from '../data/venue'
+import { highlights, rooms, practical, gallery } from '../data/venue'
 
 export default function Lokalet() {
+  const roomImgs = new Set(rooms.map((r) => r.img))
+  const galleryImages = gallery.filter((g) => !roomImgs.has(g.img))
+
   return (
     <>
       <PageHero
@@ -56,8 +59,34 @@ export default function Lokalet() {
         </div>
       </section>
 
-      {/* Praktisk informasjon */}
+      {/* Galleri */}
       <section className="bg-white">
+        <div className="container-page py-20">
+          <SectionHeading
+            center
+            eyebrow="Galleri"
+            title="Bilder fra lokalet"
+          />
+          <div className="mt-12 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
+            {galleryImages.map((g) => (
+              <div
+                key={g.img}
+                className="aspect-[4/3] overflow-hidden rounded-xl bg-primary/5"
+              >
+                <img
+                  src={g.img}
+                  alt={g.alt}
+                  loading="lazy"
+                  className="h-full w-full object-cover transition-transform duration-500 hover:scale-105"
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Praktisk informasjon */}
+      <section className="bg-warm">
         <div className="container-page py-20">
           <SectionHeading
             center
