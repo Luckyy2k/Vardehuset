@@ -27,7 +27,7 @@ export default function Home() {
           />
           <div className="absolute inset-0 bg-gradient-to-t from-primary/95 via-primary/70 to-primary/40" />
         </div>
-        <div className="container-page relative flex min-h-[78vh] flex-col justify-center py-24">
+        <div className="container-page relative flex min-h-[78vh] flex-col justify-center pb-24 pt-56">
           <p className="text-xs font-semibold uppercase tracking-[0.25em] text-accent-light">
             {site.name}
           </p>
