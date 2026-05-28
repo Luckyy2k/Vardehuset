@@ -13,27 +13,39 @@ function ConcertCard({ concert, muted }) {
   const date = new Date(concert.date)
   return (
     <div
-      className={`flex gap-5 rounded-2xl border p-6 ${
+      className={`overflow-hidden rounded-2xl border ${
         muted ? 'border-primary/10 bg-warm' : 'border-primary/10 bg-white shadow-sm'
       }`}
     >
-      <div className="shrink-0 text-center">
-        <p className="text-3xl font-light text-accent">{date.getDate()}</p>
-        <p className="text-xs uppercase tracking-wider text-ink-light">
-          {fmt.format(date).replace(/^\d+\.?\s*/, '')}
-        </p>
-      </div>
-      <div>
-        <p className="text-xs uppercase tracking-wider text-ink-light">
-          {weekday.format(date)}
-        </p>
-        <h3 className="text-lg text-primary">{concert.title}</h3>
-        {concert.venue && (
-          <p className="text-sm font-medium text-accent">{concert.venue}</p>
-        )}
-        {concert.description && (
-          <p className="mt-1 text-sm text-ink-light">{concert.description}</p>
-        )}
+      {concert.image && (
+        <div className="aspect-[16/9] overflow-hidden">
+          <img
+            src={concert.image}
+            alt={concert.title}
+            loading="lazy"
+            className="h-full w-full object-cover"
+          />
+        </div>
+      )}
+      <div className="flex gap-5 p-6">
+        <div className="shrink-0 text-center">
+          <p className="text-3xl font-light text-accent">{date.getDate()}</p>
+          <p className="text-xs uppercase tracking-wider text-ink-light">
+            {fmt.format(date).replace(/^\d+\.?\s*/, '')}
+          </p>
+        </div>
+        <div>
+          <p className="text-xs uppercase tracking-wider text-ink-light">
+            {weekday.format(date)}
+          </p>
+          <h3 className="text-lg text-primary">{concert.title}</h3>
+          {concert.venue && (
+            <p className="text-sm font-medium text-accent">{concert.venue}</p>
+          )}
+          {concert.description && (
+            <p className="mt-1 text-sm text-ink-light">{concert.description}</p>
+          )}
+        </div>
       </div>
     </div>
   )

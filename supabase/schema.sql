@@ -34,6 +34,7 @@ create table if not exists public.concerts (
   date date not null,
   venue text,
   description text,
+  image text,
   created_at timestamptz not null default now()
 );
 

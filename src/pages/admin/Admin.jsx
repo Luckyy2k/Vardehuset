@@ -6,6 +6,7 @@ import Login from './Login'
 import CalendarAdmin from './CalendarAdmin'
 import InquiriesAdmin from './InquiriesAdmin'
 import CollectionAdmin from './CollectionAdmin'
+import MembersAdmin from './MembersAdmin'
 
 const SECTIONS = [
   { key: 'kalender', label: 'Kalender' },
@@ -33,6 +34,7 @@ function Section({ active }) {
             { key: 'date', label: 'Dato', type: 'date' },
             { key: 'venue', label: 'Sted' },
             { key: 'description', label: 'Beskrivelse', type: 'textarea' },
+            { key: 'image', label: 'Bilde', type: 'image', folder: 'konserter' },
           ]}
         />
       )
@@ -57,22 +59,7 @@ function Section({ active }) {
         />
       )
     case 'medlemmer':
-      return (
-        <CollectionAdmin
-          table="members"
-          title="Medlemmer"
-          fields={[
-            { key: 'name', label: 'Navn' },
-            {
-              key: 'voice',
-              label: 'Stemmegruppe',
-              type: 'select',
-              options: ['Dirigent', '1T', '2T', '1B', '2B'],
-            },
-            { key: 'img', label: 'Bilde (URL)' },
-          ]}
-        />
-      )
+      return <MembersAdmin />
     default:
       return null
   }

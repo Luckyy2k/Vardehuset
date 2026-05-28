@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { supabase } from '../../lib/supabase'
+import ImageField from './ImageField'
 
 const inputClass =
   'mt-1 w-full rounded-lg border border-primary/15 px-3 py-2 text-sm outline-none focus:border-accent focus:ring-2 focus:ring-accent/20'
@@ -93,10 +94,16 @@ export default function CollectionAdmin({ table, title, fields, orderBy = 'id' }
           {fields.map((f) => (
             <label
               key={f.key}
-              className={`block text-sm ${f.type === 'textarea' ? 'sm:col-span-2' : ''}`}
+              className={`block text-sm ${f.type === 'textarea' || f.type === 'image' ? 'sm:col-span-2' : ''}`}
             >
               <span className="font-medium text-primary">{f.label}</span>
-              {f.type === 'textarea' ? (
+              {f.type === 'image' ? (
+                <ImageField
+                  value={form[f.key] ?? ''}
+                  onChange={(url) => setForm((s) => ({ ...s, [f.key]: url }))}
+                  folder={f.folder || 'uploads'}
+                />
+              ) : f.type === 'textarea' ? (
                 <textarea
                   rows="3"
                   value={form[f.key] ?? ''}
