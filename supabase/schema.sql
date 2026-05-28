@@ -91,3 +91,27 @@ begin
     execute format('create policy "%1$s_write_auth" on public.%1$s for all to authenticated using (true) with check (true);', t);
   end loop;
 end $$;
+
+-- =========================================================
+--  Tabell-rettigheter (GRANT)
+--  RLS styrer rad-tilgang, men rollene trenger også
+--  tabell-privilegier for at PostgREST skal slippe dem til.
+-- =========================================================
+
+grant usage on schema public to anon, authenticated;
+
+-- Offentlig lesetilgang
+grant select on
+  public.booked_dates, public.concerts, public.board_members,
+  public.sponsors, public.members
+  to anon, authenticated;
+
+-- Forespørsler: alle kan sende inn, innloggede kan lese/slette
+grant insert on public.inquiries to anon, authenticated;
+grant select, delete on public.inquiries to authenticated;
+
+-- Admin (innlogget): full skrivetilgang til innhold og kalender
+grant insert, update, delete on
+  public.booked_dates, public.concerts, public.board_members,
+  public.sponsors, public.members
+  to authenticated;
