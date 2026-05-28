@@ -7,7 +7,7 @@ const order = ['Dirigent', '1T', '2T', '1B', '2B']
 const inputClass =
   'mt-1 w-full rounded-lg border border-primary/15 px-3 py-2 text-sm outline-none focus:border-accent focus:ring-2 focus:ring-accent/20'
 
-const blank = { name: '', voice: '1T', img: '' }
+const blank = { name: '', voice: '1T', img: '', role: '' }
 
 export default function MembersAdmin() {
   const [rows, setRows] = useState([])
@@ -39,7 +39,12 @@ export default function MembersAdmin() {
   }
 
   function startEdit(row) {
-    setForm({ name: row.name ?? '', voice: row.voice ?? '1T', img: row.img ?? '' })
+    setForm({
+      name: row.name ?? '',
+      voice: row.voice ?? '1T',
+      img: row.img ?? '',
+      role: row.role ?? '',
+    })
     setEditing(row.id)
     setError('')
   }
@@ -47,7 +52,7 @@ export default function MembersAdmin() {
   async function save(e) {
     e.preventDefault()
     setError('')
-    const payload = { name: form.name, voice: form.voice, img: form.img }
+    const payload = { name: form.name, voice: form.voice, img: form.img, role: form.role || null }
     const res =
       editing === 'new'
         ? await supabase.from('members').insert(payload)
@@ -123,6 +128,15 @@ export default function MembersAdmin() {
               ))}
             </select>
           </label>
+          <label className="block text-sm sm:col-span-2">
+            <span className="font-medium text-primary">Rolle / tittel</span>
+            <input
+              value={form.role}
+              onChange={(e) => setForm((s) => ({ ...s, role: e.target.value }))}
+              className={inputClass}
+              placeholder="F.eks. Formann, Æresmedlem (skill flere med komma)"
+            />
+          </label>
           {error && <p className="text-sm text-red-600 sm:col-span-2">{error}</p>}
           <div className="flex gap-3 sm:col-span-2">
             <button
@@ -164,9 +178,12 @@ export default function MembersAdmin() {
                         <img src={m.img} alt={m.name} className="h-full w-full object-cover" />
                       )}
                     </div>
-                    <p className="min-w-0 flex-1 truncate text-sm font-medium text-primary">
-                      {m.name}
-                    </p>
+                    <div className="min-w-0 flex-1">
+                      <p className="truncate text-sm font-medium text-primary">{m.name}</p>
+                      {m.role && (
+                        <p className="truncate text-xs text-accent">{m.role}</p>
+                      )}
+                    </div>
                     <button
                       onClick={() => startEdit(m)}
                       className="rounded-full border border-primary/20 px-3 py-1 text-xs text-primary hover:bg-warm"

@@ -57,7 +57,8 @@ create table if not exists public.members (
   id bigint generated always as identity primary key,
   name text not null,
   voice text,
-  img text
+  img text,
+  role text
 );
 
 -- =========================================================
