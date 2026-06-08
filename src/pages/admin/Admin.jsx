@@ -7,10 +7,12 @@ import CalendarAdmin from './CalendarAdmin'
 import InquiriesAdmin from './InquiriesAdmin'
 import CollectionAdmin from './CollectionAdmin'
 import MembersAdmin from './MembersAdmin'
+import ContentAdmin from './ContentAdmin'
 
 const SECTIONS = [
   { key: 'kalender', label: 'Kalender' },
   { key: 'foresporsler', label: 'Forespørsler' },
+  { key: 'tekster', label: 'Tekster' },
   { key: 'konserter', label: 'Konserter' },
   { key: 'styret', label: 'Styret' },
   { key: 'sponsorer', label: 'Sponsorer' },
@@ -23,6 +25,8 @@ function Section({ active }) {
       return <CalendarAdmin />
     case 'foresporsler':
       return <InquiriesAdmin />
+    case 'tekster':
+      return <ContentAdmin />
     case 'konserter':
       return (
         <CollectionAdmin

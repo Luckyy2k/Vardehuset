@@ -1,14 +1,16 @@
 import PageHero from '../components/PageHero'
 import CTASection from '../components/CTASection'
+import { useContent } from '../lib/useContent'
 import { technical, technicalNotes } from '../data/venue'
 
 export default function TekniskeLosninger() {
+  const t = useContent()
   return (
     <>
       <PageHero
-        eyebrow="Kulturhuset Varde tilbyr"
-        title="Tekniske løsninger"
-        intro="Et moderne kulturhus med profesjonelle fasiliteter for konsert, fest og arrangement."
+        eyebrow={t('teknisk.hero.eyebrow')}
+        title={t('teknisk.hero.title')}
+        intro={t('teknisk.hero.intro')}
       />
 
       <section className="bg-white">
@@ -38,9 +40,9 @@ export default function TekniskeLosninger() {
       </section>
 
       <CTASection
-        eyebrow="Interessert i å leie?"
-        title="Ta kontakt for en uforpliktende visning"
-        text="Send oss en forespørsel om din ønskede dato, så hjelper vi deg videre."
+        eyebrow={t('teknisk.cta.eyebrow')}
+        title={t('teknisk.cta.title')}
+        text={t('teknisk.cta.text')}
         primary={{ label: 'Send forespørsel', to: '/foresporsel' }}
         secondary={{ label: 'Se lokalet', to: '/lokalet' }}
       />

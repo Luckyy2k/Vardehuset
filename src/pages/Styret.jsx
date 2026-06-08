@@ -2,6 +2,7 @@ import PageHero from '../components/PageHero'
 import SectionHeading from '../components/SectionHeading'
 import Button from '../components/Button'
 import { useCollection } from '../lib/useCollection'
+import { useContent } from '../lib/useContent'
 import { board as fallback } from '../data/board'
 
 function initials(name) {
@@ -14,13 +15,14 @@ function initials(name) {
 }
 
 export default function Styret() {
+  const t = useContent()
   const { data: board } = useCollection('board_members', fallback, {
     orderBy: { column: 'id', ascending: true },
   })
 
   return (
     <>
-      <PageHero eyebrow="Mannskoret Varde" title="Styret" />
+      <PageHero eyebrow={t('styret.hero.eyebrow')} title={t('styret.hero.title')} />
 
       <section className="bg-white">
         <div className="container-page py-16">
@@ -33,8 +35,7 @@ export default function Styret() {
               />
             </div>
             <figcaption className="mt-3 text-center text-sm text-ink-light">
-              Fra venstre: Robert Valderhaug, Sverre Petter Abelseth, Einar
-              Gundersen, Trond Inge Aarønes
+              {t('styret.photo.caption')}
             </figcaption>
           </figure>
 
@@ -69,8 +70,8 @@ export default function Styret() {
         <div className="container-page py-16 text-center">
           <SectionHeading
             center
-            title="Kontakt styret"
-            intro="Ta gjerne kontakt med en av styremedlemmene for spørsmål om Mannskoret Varde."
+            title={t('styret.contact.title')}
+            intro={t('styret.contact.intro')}
           />
           <div className="mt-8">
             <Button to="/bli-medlem" variant="primary">

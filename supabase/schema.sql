@@ -61,6 +61,13 @@ create table if not exists public.members (
   role text
 );
 
+-- Redigerbare sidetekster (overstyrer standardtekstene i src/data/content.js)
+create table if not exists public.site_content (
+  key text primary key,
+  value text,
+  updated_at timestamptz not null default now()
+);
+
 -- =========================================================
 --  Row Level Security
 --  - Offentlig innhold: lesbart for alle (anon)
@@ -74,6 +81,7 @@ alter table public.concerts      enable row level security;
 alter table public.board_members enable row level security;
 alter table public.sponsors      enable row level security;
 alter table public.members       enable row level security;
+alter table public.site_content  enable row level security;
 
 -- Inquiries: alle kan sende inn
 create policy "inquiries_insert_anon" on public.inquiries
@@ -87,7 +95,7 @@ create policy "inquiries_delete_auth" on public.inquiries
 do $$
 declare t text;
 begin
-  foreach t in array array['booked_dates','concerts','board_members','sponsors','members']
+  foreach t in array array['booked_dates','concerts','board_members','sponsors','members','site_content']
   loop
     execute format('create policy "%1$s_read_public" on public.%1$s for select to anon, authenticated using (true);', t);
     execute format('create policy "%1$s_write_auth" on public.%1$s for all to authenticated using (true) with check (true);', t);
@@ -105,7 +113,7 @@ grant usage on schema public to anon, authenticated;
 -- Offentlig lesetilgang
 grant select on
   public.booked_dates, public.concerts, public.board_members,
-  public.sponsors, public.members
+  public.sponsors, public.members, public.site_content
   to anon, authenticated;
 
 -- Forespørsler: alle kan sende inn, innloggede kan lese/slette
@@ -115,5 +123,5 @@ grant select, delete on public.inquiries to authenticated;
 -- Admin (innlogget): full skrivetilgang til innhold og kalender
 grant insert, update, delete on
   public.booked_dates, public.concerts, public.board_members,
-  public.sponsors, public.members
+  public.sponsors, public.members, public.site_content
   to authenticated;

@@ -1,6 +1,7 @@
 import Button from '../components/Button'
 import SectionHeading from '../components/SectionHeading'
 import CTASection from '../components/CTASection'
+import { useContent } from '../lib/useContent'
 import { site } from '../data/site'
 import { gallery } from '../data/venue'
 
@@ -15,6 +16,7 @@ const occasions = [
 ]
 
 export default function Home() {
+  const t = useContent()
   return (
     <>
       {/* Hero */}
@@ -32,9 +34,9 @@ export default function Home() {
             {site.name}
           </p>
           <h1 className="mt-4 max-w-2xl text-4xl font-light text-white sm:text-6xl">
-            Velkommen til Vardehuset
+            {t('home.hero.title')}
           </h1>
-          <p className="mt-5 max-w-xl text-lg text-white/80">{site.tagline}</p>
+          <p className="mt-5 max-w-xl text-lg text-white/80">{t('home.hero.tagline')}</p>
           <div className="mt-8 flex flex-wrap gap-4">
             <Button to="/foresporsel" variant="primary">
               Send forespørsel
@@ -79,9 +81,9 @@ export default function Home() {
         <div className="container-page py-20">
           <SectionHeading
             center
-            eyebrow="Våre lokaler"
-            title="Perfekt for enhver anledning"
-            intro="Moderne og fleksible lokaler tilpasset dine behov, fra intime sammenkomster til større arrangementer."
+            eyebrow={t('home.occasions.eyebrow')}
+            title={t('home.occasions.title')}
+            intro={t('home.occasions.intro')}
           />
           <div className="mt-12 flex flex-wrap justify-center gap-3">
             {occasions.map((o) => (
@@ -99,7 +101,7 @@ export default function Home() {
       {/* Galleri */}
       <section className="bg-warm">
         <div className="container-page py-20">
-          <SectionHeading center eyebrow="Galleri" title="Flotte lokaler" />
+          <SectionHeading center eyebrow={t('home.gallery.eyebrow')} title={t('home.gallery.title')} />
           <div className="mt-12 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
             {gallery.slice(0, 8).map((g) => (
               <div
@@ -128,9 +130,9 @@ export default function Home() {
         <div className="container-page grid items-center gap-12 py-20 lg:grid-cols-2">
           <div>
             <SectionHeading
-              eyebrow="Finn oss"
-              title="Beliggenhet"
-              intro="Kulturhuset Varde ligger sentralt plassert i Nørvasundet, midt mellom Ålesund sentrum og Moa. Kort vei fra E136, med god skilting og enkel adkomst."
+              eyebrow={t('home.location.eyebrow')}
+              title={t('home.location.title')}
+              intro={t('home.location.intro')}
             />
             <dl className="mt-8 space-y-5">
               <div>
@@ -141,13 +143,11 @@ export default function Home() {
               </div>
               <div>
                 <dt className="text-sm font-semibold text-primary">Parkering</dt>
-                <dd className="text-ink-light">Gratis parkering rett utenfor lokalet</dd>
+                <dd className="text-ink-light">{t('home.location.parking')}</dd>
               </div>
               <div>
                 <dt className="text-sm font-semibold text-primary">Kjøreavstand</dt>
-                <dd className="text-ink-light">
-                  10 min fra Ålesund sentrum, 5 min fra Moa
-                </dd>
+                <dd className="text-ink-light">{t('home.location.distance')}</dd>
               </div>
             </dl>
             <div className="mt-8">
@@ -169,9 +169,9 @@ export default function Home() {
       </section>
 
       <CTASection
-        eyebrow="Planlegger du et arrangement?"
-        title="La oss skape uforglemmelige opplevelser sammen"
-        text="Kontakt oss for en uforpliktende samtale om ditt arrangement. Vi hjelper deg gjerne med planleggingen."
+        eyebrow={t('home.cta.eyebrow')}
+        title={t('home.cta.title')}
+        text={t('home.cta.text')}
         primary={{ label: 'Send forespørsel', to: '/foresporsel' }}
         secondary={{ label: 'Ring oss: 412 13 927', href: 'tel:41213927' }}
       />

@@ -1,15 +1,17 @@
 import PageHero from '../components/PageHero'
 import SectionHeading from '../components/SectionHeading'
 import CTASection from '../components/CTASection'
-import { choirStats, choirHistory, conductor, performance } from '../data/choir'
+import { useContent, paragraphs } from '../lib/useContent'
+import { choirStats, conductor } from '../data/choir'
 
 export default function Mannskoret() {
+  const t = useContent()
   return (
     <>
       <PageHero
-        eyebrow="Siden 1926"
-        title="Mannskoret Varde"
-        intro="47 sangglade medlemmer med en rik historie fra Ålesund."
+        eyebrow={t('mannskoret.hero.eyebrow')}
+        title={t('mannskoret.hero.title')}
+        intro={t('mannskoret.hero.intro')}
       />
 
       {/* Statistikk */}
@@ -27,9 +29,9 @@ export default function Mannskoret() {
       {/* Historie */}
       <section className="bg-white">
         <div className="container-page py-20">
-          <SectionHeading eyebrow="Vår historie" title={choirHistory.title} />
+          <SectionHeading eyebrow={t('mannskoret.history.eyebrow')} title={t('mannskoret.history.title')} />
           <div className="mt-6 max-w-3xl space-y-4 text-ink-light">
-            {choirHistory.paragraphs.map((p, i) => (
+            {paragraphs(t('mannskoret.history.body')).map((p, i) => (
               <p key={i}>{p}</p>
             ))}
           </div>
@@ -40,9 +42,9 @@ export default function Mannskoret() {
       <section className="bg-warm">
         <div className="container-page grid items-center gap-12 py-20 lg:grid-cols-2">
           <div className="order-2 lg:order-1">
-            <SectionHeading eyebrow="Vår dirigent" title={conductor.name} />
+            <SectionHeading eyebrow={t('mannskoret.conductor.eyebrow')} title={conductor.name} />
             <div className="mt-6 space-y-4 text-ink-light">
-              {conductor.paragraphs.map((p, i) => (
+              {paragraphs(t('mannskoret.conductor.body')).map((p, i) => (
                 <p key={i}>{p}</p>
               ))}
             </div>
@@ -60,9 +62,9 @@ export default function Mannskoret() {
       {/* Forestillinger */}
       <section className="bg-white">
         <div className="container-page py-20">
-          <SectionHeading eyebrow="Forestillinger" title={performance.title} />
+          <SectionHeading eyebrow={t('mannskoret.performance.eyebrow')} title={t('mannskoret.performance.title')} />
           <div className="mt-6 max-w-3xl space-y-4 text-ink-light">
-            {performance.paragraphs.map((p, i) => (
+            {paragraphs(t('mannskoret.performance.body')).map((p, i) => (
               <p key={i}>{p}</p>
             ))}
           </div>
@@ -70,9 +72,9 @@ export default function Mannskoret() {
       </section>
 
       <CTASection
-        eyebrow="Interessert i å bli med?"
-        title="Vi er alltid på jakt etter nye sangglade medlemmer"
-        text="Ingen erfaring nødvendig!"
+        eyebrow={t('mannskoret.cta.eyebrow')}
+        title={t('mannskoret.cta.title')}
+        text={t('mannskoret.cta.text')}
         primary={{ label: 'Les mer om medlemskap', to: '/bli-medlem' }}
         secondary={{ label: 'Se medlemmer', to: '/medlemmer' }}
       />

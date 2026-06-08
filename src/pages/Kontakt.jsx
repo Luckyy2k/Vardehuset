@@ -1,13 +1,15 @@
 import PageHero from '../components/PageHero'
+import { useContent } from '../lib/useContent'
 import { choirContacts } from '../data/choir'
 
 export default function Kontakt() {
+  const t = useContent()
   return (
     <>
       <PageHero
-        eyebrow="Mannskoret Varde"
-        title="Kontakt oss"
-        intro="Ta gjerne kontakt med oss – vi svarer så raskt vi kan."
+        eyebrow={t('kontakt.hero.eyebrow')}
+        title={t('kontakt.hero.title')}
+        intro={t('kontakt.hero.intro')}
       />
 
       <section className="bg-white">

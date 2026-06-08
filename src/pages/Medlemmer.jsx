@@ -1,5 +1,6 @@
 import PageHero from '../components/PageHero'
 import { useCollection } from '../lib/useCollection'
+import { useContent } from '../lib/useContent'
 import { members as fallback, voiceGroups } from '../data/members'
 
 const order = ['Dirigent', '1T', '2T', '1B', '2B']
@@ -40,6 +41,7 @@ function MemberCard({ member }) {
 }
 
 export default function Medlemmer() {
+  const t = useContent()
   const { data: members } = useCollection('members', fallback)
 
   const grouped = order
@@ -53,9 +55,9 @@ export default function Medlemmer() {
   return (
     <>
       <PageHero
-        eyebrow="Mannskoret Varde"
-        title="Våre medlemmer"
-        intro="47 sangglade medlemmer fordelt på fire stemmegrupper, ledet av vår dirigent."
+        eyebrow={t('medlemmer.hero.eyebrow')}
+        title={t('medlemmer.hero.title')}
+        intro={t('medlemmer.hero.intro')}
       />
 
       <section className="bg-white">

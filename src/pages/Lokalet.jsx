@@ -1,18 +1,20 @@
 import PageHero from '../components/PageHero'
 import SectionHeading from '../components/SectionHeading'
 import CTASection from '../components/CTASection'
+import { useContent } from '../lib/useContent'
 import { highlights, rooms, practical, gallery } from '../data/venue'
 
 export default function Lokalet() {
+  const t = useContent()
   const roomImgs = new Set(rooms.map((r) => r.img))
   const galleryImages = gallery.filter((g) => !roomImgs.has(g.img))
 
   return (
     <>
       <PageHero
-        eyebrow="Våre lokaler"
-        title="Om lokalet"
-        intro="Flotte og moderne selskapslokaler i gjennomført stil, sentralt plassert mellom Ålesund sentrum og Moa."
+        eyebrow={t('lokalet.hero.eyebrow')}
+        title={t('lokalet.hero.title')}
+        intro={t('lokalet.hero.intro')}
       />
 
       {/* Høydepunkter */}
@@ -64,8 +66,8 @@ export default function Lokalet() {
         <div className="container-page py-20">
           <SectionHeading
             center
-            eyebrow="Galleri"
-            title="Bilder fra lokalet"
+            eyebrow={t('lokalet.gallery.eyebrow')}
+            title={t('lokalet.gallery.title')}
           />
           <div className="mt-12 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
             {galleryImages.map((g) => (
@@ -90,8 +92,8 @@ export default function Lokalet() {
         <div className="container-page py-20">
           <SectionHeading
             center
-            eyebrow="Alt du trenger"
-            title="Praktisk informasjon"
+            eyebrow={t('lokalet.practical.eyebrow')}
+            title={t('lokalet.practical.title')}
           />
           <div className="mt-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
             {practical.map((col) => (
@@ -112,9 +114,9 @@ export default function Lokalet() {
       </section>
 
       <CTASection
-        eyebrow="Interessert i å leie?"
-        title="Ta kontakt for en uforpliktende visning"
-        text="Send oss en forespørsel om din ønskede dato, så hjelper vi deg videre."
+        eyebrow={t('lokalet.cta.eyebrow')}
+        title={t('lokalet.cta.title')}
+        text={t('lokalet.cta.text')}
         primary={{ label: 'Send forespørsel', to: '/foresporsel' }}
         secondary={{ label: 'Se kalender', to: '/kalender' }}
       />

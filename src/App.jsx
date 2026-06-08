@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { ContentProvider } from './lib/ContentProvider'
 import Layout from './components/Layout'
 import Home from './pages/Home'
 import Lokalet from './pages/Lokalet'
@@ -18,6 +19,7 @@ import Admin from './pages/admin/Admin'
 export default function App() {
   return (
     <BrowserRouter>
+      <ContentProvider>
       <Routes>
         <Route element={<Layout />}>
           <Route index element={<Home />} />
@@ -36,6 +38,7 @@ export default function App() {
         </Route>
         <Route path="/admin/*" element={<Admin />} />
       </Routes>
+      </ContentProvider>
     </BrowserRouter>
   )
 }

@@ -1,9 +1,11 @@
 import PageHero from '../components/PageHero'
 import SectionHeading from '../components/SectionHeading'
 import { useCollection } from '../lib/useCollection'
-import { sponsors as fallback, history } from '../data/sponsors'
+import { useContent, paragraphs } from '../lib/useContent'
+import { sponsors as fallback } from '../data/sponsors'
 
 export default function Sponsorer() {
+  const t = useContent()
   const { data: sponsors } = useCollection('sponsors', fallback, {
     orderBy: { column: 'id', ascending: true },
   })
@@ -11,18 +13,18 @@ export default function Sponsorer() {
   return (
     <>
       <PageHero
-        eyebrow="Tusen takk"
-        title="Våre sponsorer"
-        intro="Kulturhuset Varde hadde ikke vært mulig uten våre fantastiske støttespillere."
+        eyebrow={t('sponsorer.hero.eyebrow')}
+        title={t('sponsorer.hero.title')}
+        intro={t('sponsorer.hero.intro')}
       />
 
       {/* Historie */}
       <section className="bg-white">
         <div className="container-page grid items-center gap-12 py-20 lg:grid-cols-2">
           <div>
-            <SectionHeading eyebrow="Historien" title={history.title} />
+            <SectionHeading eyebrow={t('sponsorer.history.eyebrow')} title={t('sponsorer.history.title')} />
             <div className="mt-6 space-y-4 text-ink-light">
-              {history.paragraphs.map((p, i) => (
+              {paragraphs(t('sponsorer.history.body')).map((p, i) => (
                 <p key={i}>{p}</p>
               ))}
             </div>
@@ -42,9 +44,9 @@ export default function Sponsorer() {
         <div className="container-page py-20">
           <SectionHeading
             center
-            eyebrow="En stor takk"
-            title="Disse støttespillerne har bidratt"
-            intro="Sammen har de gjort Kulturhuset Varde til virkelighet."
+            eyebrow={t('sponsorer.list.eyebrow')}
+            title={t('sponsorer.list.title')}
+            intro={t('sponsorer.list.intro')}
           />
           <div className="mx-auto mt-12 grid max-w-4xl gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {sponsors.map((s) => (

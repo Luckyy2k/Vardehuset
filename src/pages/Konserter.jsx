@@ -1,6 +1,7 @@
 import PageHero from '../components/PageHero'
 import SectionHeading from '../components/SectionHeading'
 import { useCollection } from '../lib/useCollection'
+import { useContent } from '../lib/useContent'
 import { concerts as fallback } from '../data/concerts'
 
 const fmt = new Intl.DateTimeFormat('no-NO', {
@@ -52,6 +53,7 @@ function ConcertCard({ concert, muted }) {
 }
 
 export default function Konserter() {
+  const t = useContent()
   const { data } = useCollection('concerts', fallback, {
     orderBy: { column: 'date', ascending: true },
   })
@@ -65,14 +67,14 @@ export default function Konserter() {
   return (
     <>
       <PageHero
-        eyebrow="Mannskoret Varde"
-        title="Konserter & arrangementer"
-        intro="Opplev Mannskoret Varde live – vi holder flere konserter i året."
+        eyebrow={t('konserter.hero.eyebrow')}
+        title={t('konserter.hero.title')}
+        intro={t('konserter.hero.intro')}
       />
 
       <section className="bg-white">
         <div className="container-page py-20">
-          <SectionHeading eyebrow="Kommende" title="Fremtidige konserter" />
+          <SectionHeading eyebrow={t('konserter.upcoming.eyebrow')} title={t('konserter.upcoming.title')} />
           {upcoming.length > 0 ? (
             <div className="mt-8 grid gap-5 md:grid-cols-2">
               {upcoming.map((c) => (
@@ -80,12 +82,12 @@ export default function Konserter() {
               ))}
             </div>
           ) : (
-            <p className="mt-8 text-ink-light">Ingen kommende konserter er satt opp ennå.</p>
+            <p className="mt-8 text-ink-light">{t('konserter.upcoming.empty')}</p>
           )}
 
           {past.length > 0 && (
             <div className="mt-16">
-              <SectionHeading eyebrow="Tidligere" title="Tidligere konserter" />
+              <SectionHeading eyebrow={t('konserter.past.eyebrow')} title={t('konserter.past.title')} />
               <div className="mt-8 grid gap-5 md:grid-cols-2">
                 {past.map((c) => (
                   <ConcertCard key={c.id ?? c.date + c.title} concert={c} muted />

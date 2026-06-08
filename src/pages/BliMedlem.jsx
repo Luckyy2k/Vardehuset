@@ -1,17 +1,19 @@
 import PageHero from '../components/PageHero'
 import SectionHeading from '../components/SectionHeading'
 import Button from '../components/Button'
+import { useContent } from '../lib/useContent'
 import { membership, choirContacts } from '../data/choir'
 
 export default function BliMedlem() {
+  const t = useContent()
   const formann = choirContacts.find((c) => c.role === 'Formann')
 
   return (
     <>
       <PageHero
-        eyebrow="Vi ønsker nye medlemmer velkommen"
-        title="Bli medlem"
-        intro="Har du lyst til å bli med i en glad og inkluderende gjeng?"
+        eyebrow={t('blimedlem.hero.eyebrow')}
+        title={t('blimedlem.hero.title')}
+        intro={t('blimedlem.hero.intro')}
       />
 
       {/* Fordeler */}
@@ -19,8 +21,8 @@ export default function BliMedlem() {
         <div className="container-page py-20">
           <SectionHeading
             center
-            eyebrow="Hvorfor bli med"
-            title="Dette får du som medlem"
+            eyebrow={t('blimedlem.benefits.eyebrow')}
+            title={t('blimedlem.benefits.title')}
           />
           <div className="mt-12 grid gap-6 sm:grid-cols-2">
             {membership.benefits.map((b) => (
@@ -41,8 +43,8 @@ export default function BliMedlem() {
         <div className="container-page py-20">
           <SectionHeading
             center
-            eyebrow="Praktisk informasjon"
-            title="Våre øvinger"
+            eyebrow={t('blimedlem.practice.eyebrow')}
+            title={t('blimedlem.practice.title')}
           />
           <div className="mx-auto mt-12 grid max-w-3xl gap-6 sm:grid-cols-2">
             <div className="rounded-2xl bg-white p-7 shadow-sm">
@@ -68,14 +70,13 @@ export default function BliMedlem() {
       <section className="bg-primary">
         <div className="container-page py-20 text-center">
           <p className="text-xs font-semibold uppercase tracking-[0.2em] text-accent-light">
-            Ta kontakt
+            {t('blimedlem.contact.eyebrow')}
           </p>
           <h2 className="mt-4 text-3xl text-white sm:text-4xl">
-            For nærmere informasjon
+            {t('blimedlem.contact.title')}
           </h2>
           <p className="mx-auto mt-4 max-w-xl text-white/70">
-            Ta gjerne kontakt med oss for en uforpliktende prat om medlemskap i
-            Mannskoret Varde.
+            {t('blimedlem.contact.intro')}
           </p>
           <div className="mx-auto mt-10 grid max-w-2xl gap-6 sm:grid-cols-2">
             {choirContacts.map((c) => (
