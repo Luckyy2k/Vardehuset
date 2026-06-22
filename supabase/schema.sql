@@ -25,6 +25,7 @@ create table if not exists public.booked_dates (
   date date not null unique,
   status text not null default 'opptatt',
   note text,
+  inquiry_id uuid references public.inquiries(id) on delete set null,
   created_at timestamptz not null default now()
 );
 

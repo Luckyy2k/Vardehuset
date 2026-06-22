@@ -3,9 +3,20 @@ import { supabase } from '../../lib/supabase'
 
 const FILTERS = [
   { key: 'new', label: 'Ikke håndtert' },
+  { key: 'waitlist', label: 'Venteliste' },
   { key: 'approved', label: 'Godkjent' },
   { key: 'all', label: 'Alle' },
 ]
+
+// Kategori for filter/visning:
+//  - approved: godkjent
+//  - waitlist: ikke håndtert, men ønsket dato er allerede opptatt
+//  - new: ikke håndtert, dato ledig eller ikke satt
+function categoryOf(r, bookedSet) {
+  if ((r.status || 'new') === 'approved') return 'approved'
+  if (r.event_date && bookedSet.has(r.event_date)) return 'waitlist'
+  return 'new'
+}
 
 // Forhåndsutfylt svarmelding til kunden. Telefonnummeret må fylles inn manuelt.
 function defaultMessage(r) {
@@ -28,21 +39,24 @@ function smsInfo(text) {
   return { len, unicode, segments }
 }
 
-function StatusBadge({ status }) {
-  const approved = status === 'approved'
+const CATEGORY_BADGE = {
+  approved: { label: 'Godkjent', cls: 'bg-emerald-50 text-emerald-700' },
+  waitlist: { label: 'Venteliste – dato opptatt', cls: 'bg-red-50 text-red-600' },
+  new: { label: 'Ikke håndtert', cls: 'bg-amber-50 text-amber-700' },
+}
+
+function StatusBadge({ category }) {
+  const b = CATEGORY_BADGE[category] ?? CATEGORY_BADGE.new
   return (
-    <span
-      className={`rounded-full px-2.5 py-0.5 text-xs font-medium ${
-        approved ? 'bg-emerald-50 text-emerald-700' : 'bg-amber-50 text-amber-700'
-      }`}
-    >
-      {approved ? 'Godkjent' : 'Ikke håndtert'}
+    <span className={`rounded-full px-2.5 py-0.5 text-xs font-medium ${b.cls}`}>
+      {b.label}
     </span>
   )
 }
 
 export default function InquiriesAdmin() {
   const [rows, setRows] = useState([])
+  const [bookedSet, setBookedSet] = useState(new Set())
   const [loading, setLoading] = useState(true)
   const [version, setVersion] = useState(0)
   const [filter, setFilter] = useState('new')
@@ -59,12 +73,13 @@ export default function InquiriesAdmin() {
   useEffect(() => {
     let active = true
     ;(async () => {
-      const { data } = await supabase
-        .from('inquiries')
-        .select('*')
-        .order('created_at', { ascending: false })
+      const [inq, bd] = await Promise.all([
+        supabase.from('inquiries').select('*').order('created_at', { ascending: false }),
+        supabase.from('booked_dates').select('date'),
+      ])
       if (!active) return
-      setRows(data || [])
+      setRows(inq.data || [])
+      setBookedSet(new Set((bd.data || []).map((b) => b.date)))
       setLoading(false)
     })()
     return () => {
@@ -73,15 +88,14 @@ export default function InquiriesAdmin() {
   }, [version])
 
   const counts = useMemo(() => {
-    let approved = 0
-    for (const r of rows) if (r.status === 'approved') approved++
-    return { approved, new: rows.length - approved, all: rows.length }
-  }, [rows])
+    const c = { new: 0, waitlist: 0, approved: 0, all: rows.length }
+    for (const r of rows) c[categoryOf(r, bookedSet)]++
+    return c
+  }, [rows, bookedSet])
 
   const q = query.trim().toLowerCase()
   const visible = rows.filter((r) => {
-    const status = r.status || 'new'
-    if (filter !== 'all' && status !== filter) return false
+    if (filter !== 'all' && categoryOf(r, bookedSet) !== filter) return false
     if (!q) return true
     const haystack = [r.name, r.email, r.phone, r.event_type, r.event_date, r.message]
       .filter(Boolean)
@@ -96,16 +110,51 @@ export default function InquiriesAdmin() {
     reload()
   }
 
-  async function setStatus(id, status) {
-    await supabase.from('inquiries').update({ status }).eq('id', id)
+  // Marker en dato som opptatt, lenket til henvendelsen. Rører ikke en dato
+  // som allerede er booket (manuelt eller av en annen henvendelse).
+  async function bookDate(date, inquiryId) {
+    if (!date) return
+    await supabase.from('booked_dates').upsert(
+      { date, status: 'opptatt', inquiry_id: inquiryId },
+      { onConflict: 'date', ignoreDuplicates: true },
+    )
+  }
+
+  // Frigjør en dato kun hvis den ble booket av nettopp denne henvendelsen.
+  async function freeDateIfOwned(date, inquiryId) {
+    if (!date) return
+    await supabase
+      .from('booked_dates')
+      .delete()
+      .eq('date', date)
+      .eq('inquiry_id', inquiryId)
+  }
+
+  // Godkjenn: sett status og marker datoen som opptatt med en gang.
+  async function approveInquiry(row) {
+    await supabase.from('inquiries').update({ status: 'approved' }).eq('id', row.id)
+    await bookDate(row.event_date, row.id)
     reload()
   }
 
-  // Endre ønsket dato på en forespørsel (tom = ukjent/ikke satt).
+  // Angre godkjenning: sett tilbake til ikke håndtert og frigjør datoen.
+  async function revertApproval(row) {
+    await supabase.from('inquiries').update({ status: 'new' }).eq('id', row.id)
+    await freeDateIfOwned(row.event_date, row.id)
+    reload()
+  }
+
+  // Endre ønsket dato (tom = ukjent/ikke satt). For godkjente flyttes bookingen.
   async function updateDate(id, value) {
+    const row = rows.find((r) => r.id === id)
     const event_date = value || null
     setRows((rs) => rs.map((r) => (r.id === id ? { ...r, event_date } : r)))
     await supabase.from('inquiries').update({ event_date }).eq('id', id)
+    if (row && (row.status || 'new') === 'approved') {
+      await freeDateIfOwned(row.event_date, id) // gammel dato
+      await bookDate(event_date, id) // ny dato
+      reload()
+    }
   }
 
   function openApprove(r) {
@@ -130,10 +179,11 @@ export default function InquiriesAdmin() {
       return
     }
 
-    await supabase.from('inquiries').update({ status: 'approved' }).eq('id', approving.id)
+    // Bruk nyeste rad (datoen kan ha blitt endret i kortet).
+    const row = rows.find((r) => r.id === approving.id) || approving
+    await approveInquiry(row)
     setSending(false)
     setApproving(null)
-    reload()
   }
 
   const info = smsInfo(message)
@@ -177,13 +227,15 @@ export default function InquiriesAdmin() {
         </p>
       ) : (
         <div className="space-y-4">
-          {visible.map((r) => (
+          {visible.map((r) => {
+            const category = categoryOf(r, bookedSet)
+            return (
             <div key={r.id} className="rounded-2xl border border-primary/10 bg-white p-6">
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div>
                   <div className="flex flex-wrap items-center gap-3">
                     <p className="text-lg font-medium text-primary">{r.name}</p>
-                    <StatusBadge status={r.status} />
+                    <StatusBadge category={category} />
                   </div>
                   <p className="mt-1 text-sm text-accent">
                     {r.event_type}
@@ -194,7 +246,7 @@ export default function InquiriesAdmin() {
                 <div className="flex shrink-0 gap-2">
                   {r.status === 'approved' ? (
                     <button
-                      onClick={() => setStatus(r.id, 'new')}
+                      onClick={() => revertApproval(r)}
                       className="rounded-full border border-primary/20 px-4 py-1.5 text-sm text-primary hover:bg-warm"
                     >
                       Angre godkjenning
@@ -243,13 +295,21 @@ export default function InquiriesAdmin() {
                 {!r.event_date && <span className="text-ink-light">(ikke satt ennå)</span>}
               </label>
 
+              {category === 'waitlist' && (
+                <p className="mt-2 text-xs text-red-600">
+                  Denne datoen er allerede opptatt. Forespørselen står på venteliste –
+                  kontakt kunden hvis datoen blir ledig, eller avtal en annen dato.
+                </p>
+              )}
+
               {r.created_at && (
                 <p className="mt-3 text-xs text-ink-light">
                   Mottatt {new Date(r.created_at).toLocaleString('no-NO')}
                 </p>
               )}
             </div>
-          ))}
+            )
+          })}
         </div>
       )}
 
@@ -332,7 +392,7 @@ export default function InquiriesAdmin() {
                   </button>
                   <button
                     onClick={async () => {
-                      await setStatus(approving.id, 'approved')
+                      await approveInquiry(approving)
                       setApproving(null)
                     }}
                     className="rounded-full bg-accent px-5 py-2 text-sm font-medium text-white hover:bg-accent-light"
