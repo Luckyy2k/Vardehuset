@@ -11,6 +11,19 @@ export function normalizeNO(raw: unknown): string {
   return s.replace(/^\+/, '00') // Front vil ha 00-format
 }
 
+// Antall SMS-segmenter en melding deles i (det som faktureres).
+// Én SMS = 160 tegn (eller 70 ved spesialtegn/emoji). Lengre meldinger deles,
+// og det går bort 7 tegn per del til sammenkoblingen → 153 / 63 tegn per del.
+export function countSegments(text: string): number {
+  const len = text.length
+  if (len === 0) return 0
+  const unicode = [...text].some((c) => c.charCodeAt(0) > 127)
+  const single = unicode ? 70 : 160
+  if (len <= single) return 1
+  const perPart = unicode ? 63 : 153
+  return Math.ceil(len / perPart)
+}
+
 // Vanlige Front-feilkoder (for tydeligere logging).
 export const FRONT_ERRORS: Record<number, string> = {
   1: 'Ugyldig telefonnummer',
@@ -50,5 +63,6 @@ export async function sendSms(toRaw: unknown, text: string) {
     const desc = data?.description || FRONT_ERRORS[code] || `HTTP ${resp.status}`
     throw new Error(`Front-feil: ${code} ${desc}`)
   }
-  return data
+  // segments = antall fakturerbare SMS denne meldingen ble delt i.
+  return { ...data, segments: countSegments(text) }
 }

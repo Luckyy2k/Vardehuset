@@ -11,6 +11,7 @@
 //   FRONT_SERVICE_ID, FRONT_PASSWORD, FRONT_FROM_ID
 
 import { sendSms } from '../_shared/front.ts'
+import { recordSmsUsage } from '../_shared/usage.ts'
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -41,6 +42,11 @@ Deno.serve(async (req) => {
         JSON.stringify({ error: 'SMS er ikke konfigurert (Front-secrets mangler)' }),
         { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
       )
+    }
+
+    // Tell sendte segmenter (best effort).
+    if ((result as { segments?: number }).segments) {
+      await recordSmsUsage((result as { segments: number }).segments)
     }
 
     return new Response(JSON.stringify({ ok: true, result }), {

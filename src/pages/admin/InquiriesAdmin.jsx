@@ -15,13 +15,16 @@ function defaultMessage(r) {
   return `Hei ${fornavn}! Takk for forespørselen til Vardehuset angående ${type}${dato}. Datoen er ledig og vi ønsker dere velkommen. Ta kontakt på tlf XXXXXXXX for videre avtale. Mvh Vardehuset`
 }
 
-// Antall SMS-segmenter: æ/ø/å gjør meldingen til unicode (70 tegn per segment),
-// ellers vanlig GSM (160 tegn). Brukes bare som veiledende estimat.
+// Antall SMS-segmenter: æ/ø/å gjør meldingen til unicode (70 tegn, ellers 160).
+// Ved oppdeling går 7 tegn bort per del til sammenkoblingen → 153 / 63 per del.
 function smsInfo(text) {
   const len = text.length
   const unicode = [...text].some((c) => c.charCodeAt(0) > 127)
-  const size = unicode ? 70 : 160
-  const segments = len === 0 ? 0 : Math.ceil(len / size)
+  const single = unicode ? 70 : 160
+  let segments
+  if (len === 0) segments = 0
+  else if (len <= single) segments = 1
+  else segments = Math.ceil(len / (unicode ? 63 : 153))
   return { len, unicode, segments }
 }
 
@@ -250,6 +253,12 @@ export default function InquiriesAdmin() {
                   {info.len} tegn · {info.segments} SMS
                   {info.unicode ? ' · inneholder spesialtegn (æ/ø/å)' : ''}
                 </p>
+                {info.segments > 1 && (
+                  <p className="mt-0.5 text-xs text-ink-light">
+                    Selv om meldingen er {info.segments} SMS, slås de sammen til én
+                    melding hos mottakeren. Du faktureres for {info.segments} SMS.
+                  </p>
+                )}
 
                 {error && <p className="mt-3 text-sm text-red-600">{error}</p>}
 

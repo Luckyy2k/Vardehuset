@@ -20,6 +20,7 @@
 //   supabase secrets set MANAGER_PHONE=004791615147  # mottaker som skal varsles
 
 import { sendSms } from '../_shared/front.ts'
+import { recordSmsUsage } from '../_shared/usage.ts'
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -101,7 +102,11 @@ Deno.serve(async (req) => {
 
     // SMS (best effort)
     try {
-      result.sms = await sendSms(Deno.env.get('MANAGER_PHONE'), smsText(i))
+      const smsRes = await sendSms(Deno.env.get('MANAGER_PHONE'), smsText(i))
+      result.sms = smsRes
+      if ((smsRes as { segments?: number }).segments) {
+        await recordSmsUsage((smsRes as { segments: number }).segments)
+      }
     } catch (err) {
       console.error('SMS-varsel feilet:', err)
       result.sms = { error: String(err) }
