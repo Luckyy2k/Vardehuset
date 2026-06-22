@@ -45,11 +45,11 @@ Deno.serve(async (req) => {
     }
 
     // Tell sendte segmenter (best effort).
-    if ((result as { segments?: number }).segments) {
-      await recordSmsUsage((result as { segments: number }).segments)
-    }
+    const segments = (result as { segments?: number }).segments ?? 0
+    const usage = segments ? await recordSmsUsage(segments) : { ok: false, error: 'ingen segmenter' }
+    console.log('send-sms ok:', JSON.stringify({ errorcode: (result as { errorcode?: number }).errorcode, segments, usage }))
 
-    return new Response(JSON.stringify({ ok: true, result }), {
+    return new Response(JSON.stringify({ ok: true, result, counted: segments, usage }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     })
   } catch (err) {

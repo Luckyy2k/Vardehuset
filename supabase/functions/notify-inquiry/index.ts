@@ -104,9 +104,9 @@ Deno.serve(async (req) => {
     try {
       const smsRes = await sendSms(Deno.env.get('MANAGER_PHONE'), smsText(i))
       result.sms = smsRes
-      if ((smsRes as { segments?: number }).segments) {
-        await recordSmsUsage((smsRes as { segments: number }).segments)
-      }
+      const segments = (smsRes as { segments?: number }).segments ?? 0
+      const usage = segments ? await recordSmsUsage(segments) : null
+      console.log('notify-inquiry SMS:', JSON.stringify({ segments, usage }))
     } catch (err) {
       console.error('SMS-varsel feilet:', err)
       result.sms = { error: String(err) }
