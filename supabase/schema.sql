@@ -15,7 +15,8 @@ create table if not exists public.inquiries (
   event_type text,
   event_date date,
   guests int,
-  message text
+  message text,
+  status text not null default 'new'  -- 'new' = ikke håndtert, 'approved' = godkjent
 );
 
 -- Opptatte datoer (vises i kalenderen)
@@ -88,6 +89,8 @@ create policy "inquiries_insert_anon" on public.inquiries
   for insert to anon, authenticated with check (true);
 create policy "inquiries_read_auth" on public.inquiries
   for select to authenticated using (true);
+create policy "inquiries_update_auth" on public.inquiries
+  for update to authenticated using (true) with check (true);
 create policy "inquiries_delete_auth" on public.inquiries
   for delete to authenticated using (true);
 
@@ -118,7 +121,7 @@ grant select on
 
 -- Forespørsler: alle kan sende inn, innloggede kan lese/slette
 grant insert on public.inquiries to anon, authenticated;
-grant select, delete on public.inquiries to authenticated;
+grant select, update, delete on public.inquiries to authenticated;
 
 -- Admin (innlogget): full skrivetilgang til innhold og kalender
 grant insert, update, delete on
