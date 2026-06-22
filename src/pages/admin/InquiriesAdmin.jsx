@@ -139,6 +139,7 @@ export default function InquiriesAdmin() {
 
   // Angre godkjenning: sett tilbake til ikke håndtert og frigjør datoen.
   async function revertApproval(row) {
+    if (!window.confirm('Angre godkjenningen? Datoen blir frigjort igjen.')) return
     await supabase.from('inquiries').update({ status: 'new' }).eq('id', row.id)
     await freeDateIfOwned(row.event_date, row.id)
     reload()
