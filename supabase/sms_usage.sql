@@ -24,9 +24,13 @@ grant select on public.sms_usage to anon, authenticated;
 
 -- Atomisk opptelling. Kalles server-side fra Edge Functions (service role).
 -- Legger til segmenter for inneværende år og øker meldingstelleren med 1.
+-- SECURITY DEFINER: kjører som eier (postgres) slik at service_role kan skrive
+-- til tabellen uten egne tabell-rettigheter.
 create or replace function public.increment_sms_usage(p_segments int)
 returns void
 language sql
+security definer
+set search_path = public
 as $$
   insert into public.sms_usage (year, segments, messages)
   values (extract(year from now())::int, greatest(p_segments, 0), 1)
@@ -35,3 +39,5 @@ as $$
         messages = sms_usage.messages + 1,
         updated_at = now();
 $$;
+
+grant execute on function public.increment_sms_usage(int) to service_role, authenticated;
