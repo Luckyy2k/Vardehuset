@@ -333,7 +333,7 @@ export default function InquiriesAdmin() {
               <>
                 <div className="mt-4 rounded-xl bg-amber-50 p-4 text-sm text-amber-800">
                   Meldingen sendes fra avsendernavnet <b>Vardehuset</b>. Kunden{' '}
-                  <b>kan ikke svare</b> på denne SMS-en, og du kan ikke motta svar her.
+                  <b>kan ikke svare</b> på denne SMS-en, og dere kan ikke motta svar her.
                   Skriv derfor inn et <b>telefonnummer</b> i meldingen som kunden kan
                   kontakte dere på (erstatt «XXXXXXXX»).
                 </div>
@@ -351,10 +351,16 @@ export default function InquiriesAdmin() {
                   {info.len} tegn · {info.segments} SMS
                   {info.unicode ? ' · inneholder spesialtegn (æ/ø/å)' : ''}
                 </p>
-                {info.segments > 1 && (
+                {info.segments > 0 && (
                   <p className="mt-0.5 text-xs text-ink-light">
-                    Selv om meldingen er {info.segments} SMS, slås de sammen til én
-                    melding hos mottakeren. Du faktureres for {info.segments} SMS.
+                    {info.segments > 1 && (
+                      <>
+                        Selv om meldingen er {info.segments} SMS, slås de sammen til én
+                        melding hos mottakeren.{' '}
+                      </>
+                    )}
+                    Hver SMS koster ca. 0,55 kr. Dere faktureres for {info.segments} SMS
+                    (ca. {(info.segments * 0.55).toFixed(2).replace('.', ',')} kr).
                   </p>
                 )}
 
@@ -391,7 +397,7 @@ export default function InquiriesAdmin() {
               <>
                 <div className="mt-4 rounded-xl bg-amber-50 p-4 text-sm text-amber-800">
                   Denne forespørselen har ikke telefonnummer, så det kan ikke sendes SMS.
-                  Du kan likevel markere den som godkjent.
+                  Dere kan likevel markere den som godkjent.
                 </div>
                 <div className="mt-5 flex justify-end gap-3">
                   <button
