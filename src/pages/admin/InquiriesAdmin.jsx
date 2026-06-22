@@ -360,13 +360,23 @@ export default function InquiriesAdmin() {
 
                 {error && <p className="mt-3 text-sm text-red-600">{error}</p>}
 
-                <div className="mt-5 flex justify-end gap-3">
+                <div className="mt-5 flex flex-wrap justify-end gap-3">
                   <button
                     onClick={() => setApproving(null)}
                     disabled={sending}
                     className="rounded-full border border-primary/20 px-5 py-2 text-sm text-primary hover:bg-warm disabled:opacity-50"
                   >
                     Avbryt
+                  </button>
+                  <button
+                    onClick={async () => {
+                      await approveInquiry(approving)
+                      setApproving(null)
+                    }}
+                    disabled={sending}
+                    className="rounded-full border border-accent/40 px-5 py-2 text-sm font-medium text-accent hover:bg-warm disabled:opacity-50"
+                  >
+                    Godkjenn uten SMS
                   </button>
                   <button
                     onClick={sendApproval}
