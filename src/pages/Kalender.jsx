@@ -1,13 +1,10 @@
 import { useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import PageHero from '../components/PageHero'
+import MonthYearSelect from '../components/MonthYearSelect'
 import { useCollection } from '../lib/useCollection'
 import { site } from '../data/site'
 
-const MONTHS = [
-  'januar', 'februar', 'mars', 'april', 'mai', 'juni',
-  'juli', 'august', 'september', 'oktober', 'november', 'desember',
-]
 const WEEKDAYS = ['Man', 'Tir', 'Ons', 'Tor', 'Fre', 'Lør', 'Søn']
 
 function iso(year, month, day) {
@@ -66,9 +63,7 @@ export default function Kalender() {
           {/* Kalender */}
           <div>
             <div className="mb-6 flex items-center justify-between">
-              <h2 className="text-2xl capitalize">
-                {MONTHS[view.month]} {view.year}
-              </h2>
+              <MonthYearSelect view={view} onChange={setView} />
               <div className="flex gap-2">
                 <button
                   onClick={() => changeMonth(-1)}

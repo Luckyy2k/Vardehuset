@@ -1,10 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { supabase } from '../../lib/supabase'
+import MonthYearSelect from '../../components/MonthYearSelect'
 
-const MONTHS = [
-  'januar', 'februar', 'mars', 'april', 'mai', 'juni',
-  'juli', 'august', 'september', 'oktober', 'november', 'desember',
-]
 const WEEKDAYS = ['Man', 'Tir', 'Ons', 'Tor', 'Fre', 'Lør', 'Søn']
 
 function iso(year, month, day) {
@@ -62,9 +59,7 @@ export default function CalendarAdmin() {
   return (
     <div>
       <div className="mb-2 flex items-center justify-between">
-        <h2 className="text-2xl capitalize">
-          {MONTHS[view.month]} {view.year}
-        </h2>
+        <MonthYearSelect view={view} onChange={setView} />
         <div className="flex gap-2">
           <button
             onClick={() => changeMonth(-1)}
