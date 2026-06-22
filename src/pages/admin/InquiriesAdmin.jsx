@@ -46,6 +46,7 @@ export default function InquiriesAdmin() {
   const [loading, setLoading] = useState(true)
   const [version, setVersion] = useState(0)
   const [filter, setFilter] = useState('new')
+  const [query, setQuery] = useState('')
 
   // Godkjenning / melding
   const [approving, setApproving] = useState(null) // forespørsel-rad eller null
@@ -77,10 +78,16 @@ export default function InquiriesAdmin() {
     return { approved, new: rows.length - approved, all: rows.length }
   }, [rows])
 
+  const q = query.trim().toLowerCase()
   const visible = rows.filter((r) => {
     const status = r.status || 'new'
-    if (filter === 'all') return true
-    return status === filter
+    if (filter !== 'all' && status !== filter) return false
+    if (!q) return true
+    const haystack = [r.name, r.email, r.phone, r.event_type, r.event_date, r.message]
+      .filter(Boolean)
+      .join(' ')
+      .toLowerCase()
+    return haystack.includes(q)
   })
 
   async function remove(id) {
@@ -92,6 +99,13 @@ export default function InquiriesAdmin() {
   async function setStatus(id, status) {
     await supabase.from('inquiries').update({ status }).eq('id', id)
     reload()
+  }
+
+  // Endre ønsket dato på en forespørsel (tom = ukjent/ikke satt).
+  async function updateDate(id, value) {
+    const event_date = value || null
+    setRows((rs) => rs.map((r) => (r.id === id ? { ...r, event_date } : r)))
+    await supabase.from('inquiries').update({ event_date }).eq('id', id)
   }
 
   function openApprove(r) {
@@ -145,10 +159,22 @@ export default function InquiriesAdmin() {
         </div>
       </div>
 
+      <div className="mb-6">
+        <input
+          type="search"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          placeholder="Søk i navn, e-post, telefon, melding…"
+          className="w-full rounded-lg border border-primary/15 px-4 py-2.5 text-sm outline-none focus:border-accent focus:ring-2 focus:ring-accent/20"
+        />
+      </div>
+
       {loading ? (
         <p className="text-ink-light">Laster…</p>
       ) : visible.length === 0 ? (
-        <p className="text-ink-light">Ingen forespørsler her.</p>
+        <p className="text-ink-light">
+          {q ? 'Ingen forespørsler matcher søket.' : 'Ingen forespørsler her.'}
+        </p>
       ) : (
         <div className="space-y-4">
           {visible.map((r) => (
@@ -205,6 +231,18 @@ export default function InquiriesAdmin() {
               {r.message && (
                 <p className="mt-3 whitespace-pre-line text-sm text-ink">{r.message}</p>
               )}
+
+              <label className="mt-3 flex flex-wrap items-center gap-2 text-sm">
+                <span className="font-medium text-primary">Ønsket dato</span>
+                <input
+                  type="date"
+                  value={r.event_date || ''}
+                  onChange={(e) => updateDate(r.id, e.target.value)}
+                  className="rounded-lg border border-primary/15 px-3 py-1.5 text-sm outline-none focus:border-accent focus:ring-2 focus:ring-accent/20"
+                />
+                {!r.event_date && <span className="text-ink-light">(ikke satt ennå)</span>}
+              </label>
+
               {r.created_at && (
                 <p className="mt-3 text-xs text-ink-light">
                   Mottatt {new Date(r.created_at).toLocaleString('no-NO')}
