@@ -8,6 +8,7 @@ import InquiriesAdmin from './InquiriesAdmin'
 import CollectionAdmin from './CollectionAdmin'
 import MembersAdmin from './MembersAdmin'
 import ContentAdmin from './ContentAdmin'
+import AccountAdmin from './AccountAdmin'
 
 const SECTIONS = [
   { key: 'kalender', label: 'Kalender' },
@@ -17,6 +18,7 @@ const SECTIONS = [
   { key: 'styret', label: 'Styret' },
   { key: 'sponsorer', label: 'Sponsorer' },
   { key: 'medlemmer', label: 'Medlemmer' },
+  { key: 'konto', label: 'Konto' },
 ]
 
 function Section({ active }) {
@@ -64,6 +66,8 @@ function Section({ active }) {
       )
     case 'medlemmer':
       return <MembersAdmin />
+    case 'konto':
+      return <AccountAdmin />
     default:
       return null
   }
