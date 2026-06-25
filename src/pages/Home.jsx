@@ -25,6 +25,8 @@ export default function Home() {
           <img
             src="/images/hero.jpg"
             alt="Kulturhuset Varde"
+            fetchPriority="high"
+            decoding="async"
             className="h-full w-full object-cover"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-primary/95 via-primary/70 to-primary/40" />
