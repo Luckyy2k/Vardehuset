@@ -4,11 +4,11 @@ import { nav } from '../data/site'
 
 function GroupLinks({ group, onNavigate }) {
   return (
-    <div className="px-6 pb-3 pt-2 text-center xl:px-9">
+    <div className="px-6 py-2.5 text-center xl:px-9">
       <Link
         to={group.to}
         onClick={onNavigate}
-        className="block text-base text-primary transition-colors hover:text-accent"
+        className="block text-lg text-primary transition-colors hover:text-accent"
       >
         {group.group}
       </Link>
@@ -20,7 +20,7 @@ function GroupLinks({ group, onNavigate }) {
             end={link.to === '/'}
             onClick={onNavigate}
             className={({ isActive }) =>
-              `whitespace-nowrap text-sm transition-colors hover:text-accent ${
+              `whitespace-nowrap text-base transition-colors hover:text-accent ${
                 isActive ? 'font-medium text-accent' : 'text-ink-light'
               }`
             }
@@ -82,13 +82,13 @@ export default function Navbar() {
       {/* Mobil: kompakt bar + meny */}
       <div className="lg:hidden">
         <div
-          className={`pointer-events-auto flex items-center justify-between gap-4 px-5 pb-3.5 pt-2.5 ${surfaceTransition} ${
+          className={`pointer-events-auto flex items-center justify-between gap-4 px-5 py-3 ${surfaceTransition} ${
             expanded && !open
               ? 'rounded-none bg-white/60 shadow-none backdrop-blur-md'
               : 'rounded-full bg-white/85 shadow-xl ring-1 ring-black/5 backdrop-blur-xl'
           }`}
         >
-          <Link to="/" onClick={() => setOpen(false)} className="font-semibold text-primary">
+          <Link to="/" onClick={() => setOpen(false)} className="text-lg font-semibold text-primary">
             Vardehuset
           </Link>
           <button
