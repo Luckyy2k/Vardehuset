@@ -33,12 +33,10 @@ function GroupLinks({ group, onNavigate }) {
   )
 }
 
-// Bredden styres via header-padding (ikke max-width), så overgangen blir myk:
-// øverst padding 0 → full bredde, scrollet → sentrert til 72rem (= container-page).
-const pillPadding = 'max(1.25rem, calc((100% - 72rem) / 2))'
-
-const surfaceTransition =
-  'transition-[background-color,box-shadow,border-radius,backdrop-filter] duration-500 ease-out'
+// Pillen: usynlig øverst (smelter inn i den fulle baren), hvit pill når scrollet.
+const pill = 'bg-white/85 shadow-xl ring-1 ring-black/5 backdrop-blur-xl'
+const pillTransition =
+  'transition-[background-color,box-shadow,backdrop-filter] duration-500 ease-out'
 
 export default function Navbar() {
   const [open, setOpen] = useState(false)
@@ -56,59 +54,62 @@ export default function Navbar() {
   }, [])
 
   const expanded = !scrolled // helt øverst: full bredde, frostet hvit bar
+  const bar = expanded && !open
 
   return (
-    <header
-      className="pointer-events-none fixed inset-x-0 top-0 z-50 transition-[padding] duration-500 ease-out"
-      style={{
-        paddingLeft: expanded ? '0px' : pillPadding,
-        paddingRight: expanded ? '0px' : pillPadding,
-        paddingTop: expanded ? '0px' : '0.75rem',
-      }}
-    >
-      {/* Desktop: full-bredde bar øverst → avlang pill når man scroller */}
-      <div
-        className={`pointer-events-auto hidden items-stretch justify-center px-2 lg:flex ${surfaceTransition} ${
-          expanded
-            ? 'rounded-none bg-white/60 shadow-none backdrop-blur-md'
-            : 'rounded-full bg-white/85 shadow-xl ring-1 ring-black/5 backdrop-blur-xl'
-        }`}
-      >
-        <GroupLinks group={nav[0]} />
-        <span className="my-3 w-px self-stretch bg-primary/15" aria-hidden="true" />
-        <GroupLinks group={nav[1]} />
+    <header className="pointer-events-none fixed inset-x-0 top-0 z-50">
+      {/* Bar-raden – full bredde, med frostet bakgrunn kant-til-kant øverst */}
+      <div className="relative">
+        <div
+          className={`absolute inset-0 transition-[background-color,backdrop-filter] duration-500 ease-out ${
+            bar ? 'bg-white/60 backdrop-blur-md' : 'bg-transparent backdrop-blur-0'
+          }`}
+          aria-hidden="true"
+        />
+
+        <div className="container-page relative py-3">
+          {/* Desktop: pill tilpasset innholdet, så ingenting spiller ut av endene */}
+          <div
+            className={`pointer-events-auto mx-auto hidden w-fit items-stretch px-2 lg:flex ${pillTransition} ${
+              bar ? 'rounded-none bg-transparent shadow-none ring-0' : `rounded-full ${pill}`
+            }`}
+          >
+            <GroupLinks group={nav[0]} />
+            <span className="my-3 w-px self-stretch bg-primary/15" aria-hidden="true" />
+            <GroupLinks group={nav[1]} />
+          </div>
+
+          {/* Mobil: kompakt bar */}
+          <div
+            className={`pointer-events-auto flex items-center justify-between gap-4 px-5 py-3 lg:hidden ${pillTransition} ${
+              bar ? 'rounded-none bg-transparent shadow-none ring-0' : `rounded-full ${pill}`
+            }`}
+          >
+            <Link to="/" onClick={() => setOpen(false)} className="text-lg font-semibold text-primary">
+              Vardehuset
+            </Link>
+            <button
+              type="button"
+              onClick={() => setOpen((v) => !v)}
+              className="rounded-md p-1 text-primary"
+              aria-label="Meny"
+              aria-expanded={open}
+            >
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                {open ? (
+                  <path d="M6 6l12 12M18 6L6 18" strokeLinecap="round" />
+                ) : (
+                  <path d="M4 7h16M4 12h16M4 17h16" strokeLinecap="round" />
+                )}
+              </svg>
+            </button>
+          </div>
+        </div>
       </div>
 
-      {/* Mobil: kompakt bar + meny */}
-      <div className="lg:hidden">
-        <div
-          className={`pointer-events-auto flex items-center justify-between gap-4 px-5 py-3 ${surfaceTransition} ${
-            expanded && !open
-              ? 'rounded-none bg-white/60 shadow-none backdrop-blur-md'
-              : 'rounded-full bg-white/85 shadow-xl ring-1 ring-black/5 backdrop-blur-xl'
-          }`}
-        >
-          <Link to="/" onClick={() => setOpen(false)} className="text-lg font-semibold text-primary">
-            Vardehuset
-          </Link>
-          <button
-            type="button"
-            onClick={() => setOpen((v) => !v)}
-            className="rounded-md p-1 text-primary"
-            aria-label="Meny"
-            aria-expanded={open}
-          >
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              {open ? (
-                <path d="M6 6l12 12M18 6L6 18" strokeLinecap="round" />
-              ) : (
-                <path d="M4 7h16M4 12h16M4 17h16" strokeLinecap="round" />
-              )}
-            </svg>
-          </button>
-        </div>
-
-        {open && (
+      {/* Mobilmeny – utenfor bar-raden så den frostede bakgrunnen ikke dekker den */}
+      {open && (
+        <div className="container-page lg:hidden">
           <div className="pointer-events-auto mt-2 space-y-5 rounded-2xl bg-white p-5 shadow-xl ring-1 ring-black/5">
             {nav.map((group) => (
               <div key={group.group}>
@@ -135,8 +136,8 @@ export default function Navbar() {
               </div>
             ))}
           </div>
-        )}
-      </div>
+        </div>
+      )}
     </header>
   )
 }
