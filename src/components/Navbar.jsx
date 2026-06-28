@@ -68,13 +68,14 @@ export default function Navbar() {
     >
       {/* Desktop: full-bredde bar øverst → avlang pill når man scroller */}
       <div
-        className={`pointer-events-auto hidden items-stretch justify-between px-2 lg:flex ${surfaceTransition} ${
+        className={`pointer-events-auto hidden items-stretch justify-center px-2 lg:flex ${surfaceTransition} ${
           expanded
             ? 'rounded-none bg-white/60 shadow-none backdrop-blur-md'
             : 'rounded-full bg-white/85 shadow-xl ring-1 ring-black/5 backdrop-blur-xl'
         }`}
       >
         <GroupLinks group={nav[0]} />
+        <span className="my-3 w-px self-stretch bg-primary/15" aria-hidden="true" />
         <GroupLinks group={nav[1]} />
       </div>
 
