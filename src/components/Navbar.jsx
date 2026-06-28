@@ -39,13 +39,13 @@ export default function Navbar() {
   return (
     <header className="fixed inset-x-0 top-0 z-50 bg-white/85 shadow-sm backdrop-blur">
       <div className="container-page">
-        {/* Desktop: to like halvdeler rundt en sentrert skillestrek */}
-        <div className="hidden items-stretch lg:flex">
-          <div className="flex flex-1 justify-end">
+        {/* Desktop: to nøyaktig like halvdeler rundt en sentrert skillestrek */}
+        <div className="hidden items-stretch lg:grid lg:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)]">
+          <div className="flex justify-end">
             <GroupLinks group={nav[0]} />
           </div>
           <span className="my-3 w-px self-stretch bg-primary/15" aria-hidden="true" />
-          <div className="flex flex-1 justify-start">
+          <div className="flex justify-start">
             <GroupLinks group={nav[1]} />
           </div>
         </div>
