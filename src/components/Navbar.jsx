@@ -39,11 +39,15 @@ export default function Navbar() {
   return (
     <header className="fixed inset-x-0 top-0 z-50 bg-white/85 shadow-sm backdrop-blur">
       <div className="container-page">
-        {/* Desktop: full-bredde bar med skillestrek i midten */}
-        <div className="hidden items-stretch justify-center lg:flex">
-          <GroupLinks group={nav[0]} />
+        {/* Desktop: to like halvdeler rundt en sentrert skillestrek */}
+        <div className="hidden items-stretch lg:flex">
+          <div className="flex flex-1 justify-end">
+            <GroupLinks group={nav[0]} />
+          </div>
           <span className="my-3 w-px self-stretch bg-primary/15" aria-hidden="true" />
-          <GroupLinks group={nav[1]} />
+          <div className="flex flex-1 justify-start">
+            <GroupLinks group={nav[1]} />
+          </div>
         </div>
 
         {/* Mobil: kompakt bar + meny */}
