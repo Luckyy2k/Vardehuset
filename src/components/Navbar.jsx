@@ -4,7 +4,7 @@ import { nav } from '../data/site'
 
 function GroupLinks({ group, onNavigate }) {
   return (
-    <div className="px-6 py-2.5 text-center xl:px-9">
+    <div className="px-6 pb-3 pt-2 text-center xl:px-9">
       <Link
         to={group.to}
         onClick={onNavigate}
@@ -82,7 +82,7 @@ export default function Navbar() {
       {/* Mobil: kompakt bar + meny */}
       <div className="lg:hidden">
         <div
-          className={`pointer-events-auto flex items-center justify-between gap-4 px-5 py-3 ${surfaceTransition} ${
+          className={`pointer-events-auto flex items-center justify-between gap-4 px-5 pb-3.5 pt-2.5 ${surfaceTransition} ${
             expanded && !open
               ? 'rounded-none bg-white/60 shadow-none backdrop-blur-md'
               : 'rounded-full bg-white/85 shadow-xl ring-1 ring-black/5 backdrop-blur-xl'
