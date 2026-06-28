@@ -8,7 +8,7 @@ function GroupLinks({ group, onNavigate }) {
       <Link
         to={group.to}
         onClick={onNavigate}
-        className="block text-lg text-primary transition-colors hover:text-accent"
+        className="block text-lg font-medium text-primary transition-colors hover:text-accent"
       >
         {group.group}
       </Link>
@@ -20,8 +20,8 @@ function GroupLinks({ group, onNavigate }) {
             end={link.to === '/'}
             onClick={onNavigate}
             className={({ isActive }) =>
-              `whitespace-nowrap text-base transition-colors hover:text-accent ${
-                isActive ? 'font-medium text-accent' : 'text-ink-light'
+              `whitespace-nowrap text-base font-medium transition-colors hover:text-accent ${
+                isActive ? 'font-semibold text-accent' : 'text-ink-light'
               }`
             }
           >
