@@ -30,8 +30,6 @@ export default function Home() {
             className="h-full w-full object-cover"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-primary/95 via-primary/70 to-primary/40" />
-          {/* Scrim øverst så den lyse headeren er lesbar mot bildet */}
-          <div className="absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-black/30 to-transparent" />
         </div>
         <div className="container-page relative flex min-h-[78vh] flex-col justify-center pb-24 pt-56">
           <p className="text-xs font-semibold uppercase tracking-[0.25em] text-accent-light">
