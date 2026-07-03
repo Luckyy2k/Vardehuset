@@ -100,16 +100,22 @@ Deno.serve(async (req) => {
       result.email = { error: String(err) }
     }
 
-    // SMS (best effort)
-    try {
-      const smsRes = await sendSms(Deno.env.get('MANAGER_PHONE'), smsText(i))
-      result.sms = smsRes
-      const segments = (smsRes as { segments?: number }).segments ?? 0
-      const usage = segments ? await recordSmsUsage(segments) : null
-      console.log('notify-inquiry SMS:', JSON.stringify({ segments, usage }))
-    } catch (err) {
-      console.error('SMS-varsel feilet:', err)
-      result.sms = { error: String(err) }
+    // SMS til forvalter (valgfritt – sendes kun hvis MANAGER_PHONE er satt).
+    // Er den ikke satt, varsles forvalteren kun på e-post.
+    const managerPhone = Deno.env.get('MANAGER_PHONE')
+    if (managerPhone) {
+      try {
+        const smsRes = await sendSms(managerPhone, smsText(i))
+        result.sms = smsRes
+        const segments = (smsRes as { segments?: number }).segments ?? 0
+        const usage = segments ? await recordSmsUsage(segments) : null
+        console.log('notify-inquiry SMS:', JSON.stringify({ segments, usage }))
+      } catch (err) {
+        console.error('SMS-varsel feilet:', err)
+        result.sms = { error: String(err) }
+      }
+    } else {
+      result.sms = { skipped: true, reason: 'MANAGER_PHONE ikke satt' }
     }
 
     return new Response(JSON.stringify({ ok: true, ...result }), {

@@ -21,8 +21,8 @@ export default function AccountAdmin() {
     setError('')
     setDone(false)
 
-    if (password.length < 8) {
-      setError('Passordet må være minst 8 tegn.')
+    if (password.length < 6) {
+      setError('Passordet må være minst 6 tegn.')
       return
     }
     if (password !== confirm) {
@@ -52,7 +52,7 @@ export default function AccountAdmin() {
       <form onSubmit={save} className="max-w-sm rounded-2xl border border-primary/10 bg-white p-6">
         <h3 className="text-lg text-primary">Bytt passord</h3>
         <p className="mt-1 text-sm text-ink-light">
-          Velg et passord dere husker (minst 8 tegn).
+          Velg et passord dere husker (minst 6 tegn).
         </p>
 
         <label className="mt-4 block text-sm">
