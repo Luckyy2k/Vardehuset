@@ -52,6 +52,15 @@ async function sendEmail(i: Record<string, unknown>) {
     <h2>Ny forespørsel om leie</h2>
     <table>${rows}</table>
     ${i.message ? `<p><b>Melding:</b><br>${String(i.message).replace(/\n/g, '<br>')}</p>` : ''}
+    <p style="margin-top:24px">
+      <a href="https://vardehuset.no/admin"
+         style="display:inline-block;background:#c2410c;color:#ffffff;text-decoration:none;padding:12px 24px;border-radius:9999px;font-weight:600">
+        Gå til admin for å svare
+      </a>
+    </p>
+    <p style="margin-top:8px;color:#6b7280;font-size:13px">
+      Eller åpne <a href="https://vardehuset.no/admin">vardehuset.no/admin</a>
+    </p>
   `
 
   const res = await fetch('https://api.resend.com/emails', {
