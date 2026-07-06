@@ -34,7 +34,7 @@ async function sendEmail(i: Record<string, unknown>) {
   if (!apiKey) return { skipped: true, reason: 'RESEND_API_KEY mangler' }
 
   const to = Deno.env.get('MAIL_TO') ?? 'post@vardehuset.no'
-  const from = Deno.env.get('MAIL_FROM') ?? 'Vardehuset <onboarding@resend.dev>'
+  const from = Deno.env.get('MAIL_FROM') ?? 'Vardehuset <hei@vardehuset.no>'
 
   const rows = [
     ['Navn', i.name],
