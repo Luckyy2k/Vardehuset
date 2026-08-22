@@ -3,20 +3,11 @@ import { supabase } from '../../lib/supabase'
 
 const FILTERS = [
   { key: 'new', label: 'Ikke håndtert' },
-  { key: 'waitlist', label: 'Venteliste' },
   { key: 'approved', label: 'Godkjent' },
   { key: 'all', label: 'Alle' },
 ]
 
-// Kategori for filter/visning:
-//  - approved: godkjent
-//  - waitlist: ikke håndtert, men ønsket dato er allerede opptatt
-//  - new: ikke håndtert, dato ledig eller ikke satt
-function categoryOf(r, bookedSet) {
-  if ((r.status || 'new') === 'approved') return 'approved'
-  if (r.event_date && bookedSet.has(r.event_date)) return 'waitlist'
-  return 'new'
-}
+const statusOf = (r) => (r.status === 'approved' ? 'approved' : 'new')
 
 // Forhåndsutfylt svarmelding til kunden. Telefonnummeret må fylles inn manuelt.
 function defaultMessage(r) {
@@ -39,14 +30,13 @@ function smsInfo(text) {
   return { len, unicode, segments }
 }
 
-const CATEGORY_BADGE = {
+const STATUS_BADGE = {
   approved: { label: 'Godkjent', cls: 'bg-emerald-50 text-emerald-700' },
-  waitlist: { label: 'Venteliste – dato opptatt', cls: 'bg-red-50 text-red-600' },
   new: { label: 'Ikke håndtert', cls: 'bg-amber-50 text-amber-700' },
 }
 
-function StatusBadge({ category }) {
-  const b = CATEGORY_BADGE[category] ?? CATEGORY_BADGE.new
+function StatusBadge({ status }) {
+  const b = STATUS_BADGE[status] ?? STATUS_BADGE.new
   return (
     <span className={`rounded-full px-2.5 py-0.5 text-xs font-medium ${b.cls}`}>
       {b.label}
@@ -56,7 +46,6 @@ function StatusBadge({ category }) {
 
 export default function InquiriesAdmin() {
   const [rows, setRows] = useState([])
-  const [bookedSet, setBookedSet] = useState(new Set())
   const [loading, setLoading] = useState(true)
   const [version, setVersion] = useState(0)
   const [filter, setFilter] = useState('new')
@@ -73,13 +62,12 @@ export default function InquiriesAdmin() {
   useEffect(() => {
     let active = true
     ;(async () => {
-      const [inq, bd] = await Promise.all([
-        supabase.from('inquiries').select('*').order('created_at', { ascending: false }),
-        supabase.from('booked_dates').select('date'),
-      ])
+      const { data } = await supabase
+        .from('inquiries')
+        .select('*')
+        .order('created_at', { ascending: false })
       if (!active) return
-      setRows(inq.data || [])
-      setBookedSet(new Set((bd.data || []).map((b) => b.date)))
+      setRows(data || [])
       setLoading(false)
     })()
     return () => {
@@ -88,14 +76,14 @@ export default function InquiriesAdmin() {
   }, [version])
 
   const counts = useMemo(() => {
-    const c = { new: 0, waitlist: 0, approved: 0, all: rows.length }
-    for (const r of rows) c[categoryOf(r, bookedSet)]++
+    const c = { new: 0, approved: 0, all: rows.length }
+    for (const r of rows) c[statusOf(r)]++
     return c
-  }, [rows, bookedSet])
+  }, [rows])
 
   const q = query.trim().toLowerCase()
   const visible = rows.filter((r) => {
-    if (filter !== 'all' && categoryOf(r, bookedSet) !== filter) return false
+    if (filter !== 'all' && statusOf(r) !== filter) return false
     if (!q) return true
     const haystack = [r.name, r.email, r.phone, r.event_type, r.event_date, r.message]
       .filter(Boolean)
@@ -110,52 +98,24 @@ export default function InquiriesAdmin() {
     reload()
   }
 
-  // Marker en dato som opptatt, lenket til henvendelsen. Rører ikke en dato
-  // som allerede er booket (manuelt eller av en annen henvendelse).
-  async function bookDate(date, inquiryId) {
-    if (!date) return
-    await supabase.from('booked_dates').upsert(
-      { date, status: 'opptatt', inquiry_id: inquiryId },
-      { onConflict: 'date', ignoreDuplicates: true },
-    )
-  }
-
-  // Frigjør en dato kun hvis den ble booket av nettopp denne henvendelsen.
-  async function freeDateIfOwned(date, inquiryId) {
-    if (!date) return
-    await supabase
-      .from('booked_dates')
-      .delete()
-      .eq('date', date)
-      .eq('inquiry_id', inquiryId)
-  }
-
-  // Godkjenn: sett status og marker datoen som opptatt med en gang.
+  // Godkjenn: sett status. Datoer styres i Google Kalender.
   async function approveInquiry(row) {
     await supabase.from('inquiries').update({ status: 'approved' }).eq('id', row.id)
-    await bookDate(row.event_date, row.id)
     reload()
   }
 
-  // Angre godkjenning: sett tilbake til ikke håndtert og frigjør datoen.
+  // Angre godkjenning: sett tilbake til ikke håndtert.
   async function revertApproval(row) {
-    if (!window.confirm('Angre godkjenningen? Datoen blir frigjort igjen.')) return
+    if (!window.confirm('Angre godkjenningen?')) return
     await supabase.from('inquiries').update({ status: 'new' }).eq('id', row.id)
-    await freeDateIfOwned(row.event_date, row.id)
     reload()
   }
 
-  // Endre ønsket dato (tom = ukjent/ikke satt). For godkjente flyttes bookingen.
+  // Endre ønsket dato (tom = ukjent/ikke satt).
   async function updateDate(id, value) {
-    const row = rows.find((r) => r.id === id)
     const event_date = value || null
     setRows((rs) => rs.map((r) => (r.id === id ? { ...r, event_date } : r)))
     await supabase.from('inquiries').update({ event_date }).eq('id', id)
-    if (row && (row.status || 'new') === 'approved') {
-      await freeDateIfOwned(row.event_date, id) // gammel dato
-      await bookDate(event_date, id) // ny dato
-      reload()
-    }
   }
 
   function openApprove(r) {
@@ -228,15 +188,13 @@ export default function InquiriesAdmin() {
         </p>
       ) : (
         <div className="space-y-4">
-          {visible.map((r) => {
-            const category = categoryOf(r, bookedSet)
-            return (
+          {visible.map((r) => (
             <div key={r.id} className="rounded-2xl border border-primary/10 bg-white p-6">
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div>
                   <div className="flex flex-wrap items-center gap-3">
                     <p className="text-lg font-medium text-primary">{r.name}</p>
-                    <StatusBadge category={category} />
+                    <StatusBadge status={statusOf(r)} />
                   </div>
                   <p className="mt-1 text-sm text-accent">
                     {r.event_type}
@@ -296,21 +254,13 @@ export default function InquiriesAdmin() {
                 {!r.event_date && <span className="text-ink-light">(ikke satt ennå)</span>}
               </label>
 
-              {category === 'waitlist' && (
-                <p className="mt-2 text-xs text-red-600">
-                  Denne datoen er allerede opptatt. Forespørselen står på venteliste –
-                  kontakt kunden hvis datoen blir ledig, eller avtal en annen dato.
-                </p>
-              )}
-
               {r.created_at && (
                 <p className="mt-3 text-xs text-ink-light">
                   Mottatt {new Date(r.created_at).toLocaleString('no-NO')}
                 </p>
               )}
             </div>
-            )
-          })}
+          ))}
         </div>
       )}
 

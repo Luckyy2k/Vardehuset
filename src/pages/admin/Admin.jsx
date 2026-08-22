@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom'
 import { supabase, isSupabaseConfigured } from '../../lib/supabase'
 import { useSession } from '../../lib/useSession'
 import Login from './Login'
-import CalendarAdmin from './CalendarAdmin'
 import InquiriesAdmin from './InquiriesAdmin'
 import CollectionAdmin from './CollectionAdmin'
 import MembersAdmin from './MembersAdmin'
@@ -11,7 +10,6 @@ import ContentAdmin from './ContentAdmin'
 import AccountAdmin from './AccountAdmin'
 
 const SECTIONS = [
-  { key: 'kalender', label: 'Kalender' },
   { key: 'foresporsler', label: 'Forespørsler' },
   { key: 'tekster', label: 'Tekster' },
   { key: 'konserter', label: 'Konserter' },
@@ -23,8 +21,6 @@ const SECTIONS = [
 
 function Section({ active }) {
   switch (active) {
-    case 'kalender':
-      return <CalendarAdmin />
     case 'foresporsler':
       return <InquiriesAdmin />
     case 'tekster':
@@ -75,7 +71,7 @@ function Section({ active }) {
 
 export default function Admin() {
   const { session, loading } = useSession()
-  const [active, setActive] = useState('kalender')
+  const [active, setActive] = useState('foresporsler')
 
   if (!isSupabaseConfigured) {
     return (
