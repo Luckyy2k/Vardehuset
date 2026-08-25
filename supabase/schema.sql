@@ -37,7 +37,8 @@ create table if not exists public.concerts (
   title text not null,
   date date not null,
   venue text,
-  doors text,  -- "dørene åpner", f.eks. "kl. 18:30"
+  doors text,       -- "dørene åpner", f.eks. "kl. 18:30"
+  start_time text,  -- når konserten starter, f.eks. "kl. 19:00"
   description text,
   ticket_url text,    -- lenke for billettknappen
   ticket_label text,  -- tekst på billettknappen (tom = "Bestill billett her")

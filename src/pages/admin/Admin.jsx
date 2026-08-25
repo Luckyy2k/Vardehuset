@@ -36,6 +36,7 @@ function Section({ active }) {
             { key: 'date', label: 'Dato', type: 'date' },
             { key: 'venue', label: 'Sted' },
             { key: 'doors', label: 'Dørene åpner (f.eks. kl. 18:30)' },
+            { key: 'start_time', label: 'Konserten starter (f.eks. kl. 19:00)' },
             { key: 'description', label: 'Beskrivelse', type: 'textarea' },
             { key: 'ticket_url', label: 'Billettlink (valgfri)' },
             { key: 'ticket_label', label: 'Tekst på billettknapp (standard: Bestill billett her)' },

@@ -45,10 +45,11 @@ function ConcertCard({ concert, muted }) {
           {concert.venue && (
             <p className="text-sm font-medium text-accent">{concert.venue}</p>
           )}
-          {concert.doors && (
-            <p className="mt-1.5 text-base font-medium text-primary">
-              Dørene åpner {concert.doors}
-            </p>
+          {(concert.doors || concert.start_time) && (
+            <div className="mt-1.5 space-y-0.5 text-base font-medium text-primary">
+              {concert.doors && <p>Dørene åpner {concert.doors}</p>}
+              {concert.start_time && <p>Konserten starter {concert.start_time}</p>}
+            </div>
           )}
           {concert.description && (
             <LinkedText
