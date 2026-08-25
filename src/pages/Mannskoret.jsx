@@ -1,6 +1,7 @@
 import PageHero from '../components/PageHero'
 import SectionHeading from '../components/SectionHeading'
 import CTASection from '../components/CTASection'
+import ZoomableImage from '../components/ZoomableImage'
 import { useContent, paragraphs } from '../lib/useContent'
 import { choirStats, conductor } from '../data/choir'
 
@@ -49,13 +50,12 @@ export default function Mannskoret() {
               ))}
             </div>
           </div>
-          <div className="order-1 overflow-hidden rounded-2xl shadow-sm lg:order-2">
-            <img
-              src={conductor.img}
-              alt={conductor.name}
-              className="aspect-[4/5] w-full object-cover"
-            />
-          </div>
+          <ZoomableImage
+            src={conductor.img}
+            alt={conductor.name}
+            className="order-1 overflow-hidden rounded-2xl shadow-sm lg:order-2"
+            imgClassName="aspect-[4/5] w-full object-cover"
+          />
         </div>
       </section>
 

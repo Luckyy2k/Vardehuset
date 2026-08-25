@@ -1,6 +1,7 @@
 import PageHero from '../components/PageHero'
 import SectionHeading from '../components/SectionHeading'
 import Button from '../components/Button'
+import ZoomableImage from '../components/ZoomableImage'
 import { useCollection } from '../lib/useCollection'
 import { useContent } from '../lib/useContent'
 import { board as fallback } from '../data/board'
@@ -27,13 +28,12 @@ export default function Styret() {
       <section className="bg-white">
         <div className="container-page py-16">
           <figure className="mx-auto max-w-3xl">
-            <div className="overflow-hidden rounded-2xl shadow-sm">
-              <img
-                src="/images/historie/styret-2025.png"
-                alt="Styret 2025"
-                className="w-full object-cover"
-              />
-            </div>
+            <ZoomableImage
+              src="/images/historie/styret-2025.png"
+              alt="Styret 2025"
+              className="overflow-hidden rounded-2xl shadow-sm"
+              imgClassName="w-full object-cover"
+            />
             <figcaption className="mt-3 text-center text-sm text-ink-light">
               {t('styret.photo.caption')}
             </figcaption>

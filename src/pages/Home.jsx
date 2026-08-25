@@ -1,6 +1,7 @@
 import Button from '../components/Button'
 import SectionHeading from '../components/SectionHeading'
 import CTASection from '../components/CTASection'
+import ZoomableImage from '../components/ZoomableImage'
 import { useContent } from '../lib/useContent'
 import { site } from '../data/site'
 import { gallery } from '../data/venue'
@@ -106,17 +107,13 @@ export default function Home() {
           <SectionHeading center eyebrow={t('home.gallery.eyebrow')} title={t('home.gallery.title')} />
           <div className="mt-12 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
             {gallery.slice(0, 8).map((g) => (
-              <div
+              <ZoomableImage
                 key={g.img}
+                src={g.img}
+                alt={g.alt}
                 className="aspect-[4/3] overflow-hidden rounded-xl bg-primary/5"
-              >
-                <img
-                  src={g.img}
-                  alt={g.alt}
-                  loading="lazy"
-                  className="h-full w-full object-cover transition-transform duration-500 hover:scale-105"
-                />
-              </div>
+                imgClassName="h-full w-full object-cover transition-transform duration-500 hover:scale-105"
+              />
             ))}
           </div>
           <div className="mt-10 text-center">

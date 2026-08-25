@@ -1,6 +1,7 @@
 import PageHero from '../components/PageHero'
 import SectionHeading from '../components/SectionHeading'
 import CTASection from '../components/CTASection'
+import ZoomableImage from '../components/ZoomableImage'
 import { useContent } from '../lib/useContent'
 import { highlights, rooms, practical, gallery } from '../data/venue'
 
@@ -43,14 +44,11 @@ export default function Lokalet() {
                 key={room.title}
                 className="overflow-hidden rounded-2xl bg-white shadow-sm"
               >
-                <div className="aspect-[16/10] overflow-hidden">
-                  <img
-                    src={room.img}
-                    alt={room.title}
-                    loading="lazy"
-                    className="h-full w-full object-cover"
-                  />
-                </div>
+                <ZoomableImage
+                  src={room.img}
+                  alt={room.title}
+                  className="aspect-[16/10] overflow-hidden"
+                />
                 <div className="p-6">
                   <h3 className="text-xl">{room.title}</h3>
                   <p className="mt-2 text-ink-light">{room.text}</p>
@@ -71,17 +69,13 @@ export default function Lokalet() {
           />
           <div className="mt-12 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
             {galleryImages.map((g) => (
-              <div
+              <ZoomableImage
                 key={g.img}
+                src={g.img}
+                alt={g.alt}
                 className="aspect-[4/3] overflow-hidden rounded-xl bg-primary/5"
-              >
-                <img
-                  src={g.img}
-                  alt={g.alt}
-                  loading="lazy"
-                  className="h-full w-full object-cover transition-transform duration-500 hover:scale-105"
-                />
-              </div>
+                imgClassName="h-full w-full object-cover transition-transform duration-500 hover:scale-105"
+              />
             ))}
           </div>
         </div>

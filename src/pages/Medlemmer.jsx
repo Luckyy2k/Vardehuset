@@ -1,4 +1,5 @@
 import PageHero from '../components/PageHero'
+import ZoomableImage from '../components/ZoomableImage'
 import { useCollection } from '../lib/useCollection'
 import { useContent } from '../lib/useContent'
 import { members as fallback, voiceGroups } from '../data/members'
@@ -13,14 +14,13 @@ function MemberCard({ member }) {
 
   return (
     <figure className="group">
-      <div className="aspect-square overflow-hidden rounded-2xl bg-primary/5">
-        <img
-          src={member.img}
-          alt={member.name}
-          decoding="async"
-          className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-        />
-      </div>
+      <ZoomableImage
+        src={member.img}
+        alt={member.name}
+        loading="eager"
+        className="aspect-square overflow-hidden rounded-2xl bg-primary/5"
+        imgClassName="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+      />
       <figcaption className="mt-2 text-center text-sm font-medium text-primary">
         {member.name}
       </figcaption>

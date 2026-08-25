@@ -1,5 +1,6 @@
 import PageHero from '../components/PageHero'
 import SectionHeading from '../components/SectionHeading'
+import ZoomableImage from '../components/ZoomableImage'
 import { useCollection } from '../lib/useCollection'
 import { useContent, paragraphs } from '../lib/useContent'
 import { sponsors as fallback } from '../data/sponsors'
@@ -29,13 +30,12 @@ export default function Sponsorer() {
               ))}
             </div>
           </div>
-          <div className="overflow-hidden rounded-2xl shadow-sm">
-            <img
-              src="/images/historie/spadestikket.jpg"
-              alt="Byggestart – Kulturhuset Varde"
-              className="aspect-[4/3] w-full object-cover"
-            />
-          </div>
+          <ZoomableImage
+            src="/images/historie/spadestikket.jpg"
+            alt="Byggestart – Kulturhuset Varde"
+            className="overflow-hidden rounded-2xl shadow-sm"
+            imgClassName="aspect-[4/3] w-full object-cover"
+          />
         </div>
       </section>
 
