@@ -37,6 +37,7 @@ create table if not exists public.concerts (
   title text not null,
   date date not null,
   venue text,
+  doors text,  -- "dørene åpner", f.eks. "kl. 18:30"
   description text,
   image text,
   created_at timestamptz not null default now()

@@ -19,7 +19,7 @@ function ConcertCard({ concert, muted }) {
       }`}
     >
       {concert.image && (
-        <div className="aspect-[16/9] overflow-hidden">
+        <div className="aspect-[4/3] overflow-hidden">
           <img
             src={concert.image}
             alt={concert.title}
@@ -42,6 +42,11 @@ function ConcertCard({ concert, muted }) {
           <h3 className="text-lg text-primary">{concert.title}</h3>
           {concert.venue && (
             <p className="text-sm font-medium text-accent">{concert.venue}</p>
+          )}
+          {concert.doors && (
+            <p className="mt-1.5 text-base font-medium text-primary">
+              Dørene åpner {concert.doors}
+            </p>
           )}
           {concert.description && (
             <p className="mt-1 text-sm text-ink-light">{concert.description}</p>

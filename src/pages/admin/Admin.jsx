@@ -35,6 +35,7 @@ function Section({ active }) {
             { key: 'title', label: 'Tittel' },
             { key: 'date', label: 'Dato', type: 'date' },
             { key: 'venue', label: 'Sted' },
+            { key: 'doors', label: 'Dørene åpner (f.eks. kl. 18:30)' },
             { key: 'description', label: 'Beskrivelse', type: 'textarea' },
             { key: 'image', label: 'Bilde', type: 'image', folder: 'konserter' },
           ]}
