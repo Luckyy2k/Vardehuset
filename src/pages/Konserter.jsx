@@ -1,7 +1,9 @@
+import { useState } from 'react'
 import PageHero from '../components/PageHero'
 import SectionHeading from '../components/SectionHeading'
 import Button from '../components/Button'
 import LinkedText from '../components/LinkedText'
+import Lightbox from '../components/Lightbox'
 import { useCollection } from '../lib/useCollection'
 import { useContent } from '../lib/useContent'
 import { concerts as fallback } from '../data/concerts'
@@ -13,6 +15,7 @@ const fmt = new Intl.DateTimeFormat('no-NO', {
 const weekday = new Intl.DateTimeFormat('no-NO', { weekday: 'long' })
 
 function ConcertCard({ concert, muted }) {
+  const [zoomed, setZoomed] = useState(false)
   const date = new Date(concert.date)
   return (
     <div
@@ -21,14 +24,26 @@ function ConcertCard({ concert, muted }) {
       }`}
     >
       {concert.image && (
-        <div className="aspect-[4/3] overflow-hidden">
+        <button
+          type="button"
+          onClick={() => setZoomed(true)}
+          aria-label={`Vis bilde i full størrelse: ${concert.title}`}
+          className="block aspect-[4/3] w-full cursor-zoom-in overflow-hidden"
+        >
           <img
             src={concert.image}
             alt={concert.title}
             loading="lazy"
-            className="h-full w-full object-cover"
+            className="h-full w-full object-cover transition-transform duration-500 hover:scale-105"
           />
-        </div>
+        </button>
+      )}
+      {zoomed && concert.image && (
+        <Lightbox
+          src={concert.image}
+          alt={concert.title}
+          onClose={() => setZoomed(false)}
+        />
       )}
       <div className="flex gap-5 p-6">
         <div className="shrink-0 text-center">
