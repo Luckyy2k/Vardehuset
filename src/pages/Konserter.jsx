@@ -1,5 +1,7 @@
 import PageHero from '../components/PageHero'
 import SectionHeading from '../components/SectionHeading'
+import Button from '../components/Button'
+import LinkedText from '../components/LinkedText'
 import { useCollection } from '../lib/useCollection'
 import { useContent } from '../lib/useContent'
 import { concerts as fallback } from '../data/concerts'
@@ -49,7 +51,22 @@ function ConcertCard({ concert, muted }) {
             </p>
           )}
           {concert.description && (
-            <p className="mt-1 text-sm text-ink-light">{concert.description}</p>
+            <LinkedText
+              text={concert.description}
+              className="mt-1 whitespace-pre-line text-sm text-ink-light"
+            />
+          )}
+          {concert.ticket_url && (
+            <div className="mt-4">
+              <Button
+                href={concert.ticket_url}
+                variant="primary"
+                target="_blank"
+                rel="noreferrer noopener"
+              >
+                {concert.ticket_label || 'Bestill billett her'}
+              </Button>
+            </div>
           )}
         </div>
       </div>

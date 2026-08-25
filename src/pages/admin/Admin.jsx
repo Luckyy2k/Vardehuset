@@ -37,6 +37,8 @@ function Section({ active }) {
             { key: 'venue', label: 'Sted' },
             { key: 'doors', label: 'Dørene åpner (f.eks. kl. 18:30)' },
             { key: 'description', label: 'Beskrivelse', type: 'textarea' },
+            { key: 'ticket_url', label: 'Billettlink (valgfri)' },
+            { key: 'ticket_label', label: 'Tekst på billettknapp (standard: Bestill billett her)' },
             { key: 'image', label: 'Bilde', type: 'image', folder: 'konserter' },
           ]}
         />
