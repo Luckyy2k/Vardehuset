@@ -6,6 +6,7 @@ import ZoomableImage from '../components/ZoomableImage'
 import { useCollection } from '../lib/useCollection'
 import { useContent } from '../lib/useContent'
 import { concerts as fallback } from '../data/concerts'
+import { articles } from '../data/articles'
 
 const fmt = new Intl.DateTimeFormat('no-NO', {
   day: 'numeric',
@@ -91,9 +92,7 @@ function ArticleCard({ concert, muted }) {
         <p className="text-xs uppercase tracking-wider text-ink-light">
           Omtale
         </p>
-        <h3 className="mt-0.5 text-lg text-primary">
-          {concert.article_title || `Les om ${concert.title}`}
-        </h3>
+        <h3 className="mt-0.5 text-lg text-primary">{concert.article_title}</h3>
         {concert.article_excerpt && (
           <p className="mt-2 whitespace-pre-line text-sm text-ink-light">
             {concert.article_excerpt}
@@ -126,12 +125,28 @@ function ArticleCard({ concert, muted }) {
   )
 }
 
+// Slår sammen konserten med presseomtalen for datoen. Verdier fra Supabase
+// vinner, slik at omtalen kan overstyres i admin uten kodeendring.
+function withArticle(concert) {
+  const a = articles[concert.date]
+  if (!a) return concert
+  return {
+    ...concert,
+    article_url: concert.article_url || a.url,
+    article_title: concert.article_title || a.title,
+    article_excerpt: concert.article_excerpt || a.excerpt,
+    article_image: concert.article_image || a.image,
+  }
+}
+
 // Konsertkortet, og – dersom konserten er omtalt – artikkelkortet rett ved siden av.
 function concertCards(list, muted) {
-  return list.flatMap((c) => {
+  return list.flatMap((concert) => {
+    const c = withArticle(concert)
     const key = c.id ?? c.date + c.title
     const cards = [<ConcertCard key={key} concert={c} muted={muted} />]
-    if (c.article_url) {
+    // Vis bare artikkelkortet når det faktisk finnes noe å vise i det.
+    if (c.article_url && (c.article_title || c.article_image)) {
       cards.push(<ArticleCard key={`${key}-artikkel`} concert={c} muted={muted} />)
     }
     return cards

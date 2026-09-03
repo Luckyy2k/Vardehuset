@@ -3,6 +3,9 @@
 -- article_title   = overskriften på kortet
 -- article_excerpt = kort tekst fra artikkelen
 -- article_image   = bildet på kortet
+-- VALGFRITT: omtalen for jubileumskonserten ligger allerede i koden
+-- (src/data/articles.js) og vises uten denne migrasjonen. Kjør denne kun
+-- dersom dere vil kunne redigere omtaler fra admin-panelet.
 -- Kjøres i Supabase SQL Editor.
 
 alter table concerts

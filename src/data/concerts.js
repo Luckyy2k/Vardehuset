@@ -9,11 +9,6 @@ export const concerts = [
       'Mannskoret Varde feirer 100 år i år og inviterer til jubileumskonsert.\nPå denne konserten får dere et rikholdig utvalg av korets repertoar gjennom disse 100 årene. Fra tradisjonell Mannskorsang og Sakralt til de siste årenes Shantyer, Barbershop og Irske repertoar.',
     doors: 'kl. 18.00',
     start_time: 'kl. 19.00',
-    article_url: 'https://bypatrioten.com/nyheter/mannskoret-varde-hedret/',
-    article_title: 'Mannskoret Varde hedret',
-    article_excerpt:
-      'Etter 100 år med sang fikk Mannskoret Varde hederspris og 10 000 kroner fra Sparebanken Møre under BraBy-konferansen.',
-    article_image: '/images/konserter/bypatrioten-varde-hedret.jpg',
   },
   {
     id: 2,
