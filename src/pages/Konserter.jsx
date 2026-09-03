@@ -28,70 +28,80 @@ function ConcertCard({ concert, muted }) {
         className="aspect-[4/3] overflow-hidden"
         imgClassName="h-full w-full object-cover transition-transform duration-500 hover:scale-105"
       />
-      <div className="flex gap-5 p-6">
-        <div className="shrink-0 text-center">
-          <p className="text-3xl font-light text-accent">{date.getDate()}</p>
-          <p className="text-xs uppercase tracking-wider text-ink-light">
-            {fmt.format(date).replace(/^\d+\.?\s*/, '')}
-          </p>
+      <div className="p-6">
+        <div className="flex gap-5">
+          <div className="shrink-0 text-center">
+            <p className="text-3xl font-light text-accent">{date.getDate()}</p>
+            <p className="text-xs uppercase tracking-wider text-ink-light">
+              {fmt.format(date).replace(/^\d+\.?\s*/, '')}
+            </p>
+          </div>
+          <div className="flex-1">
+            <p className="text-xs uppercase tracking-wider text-ink-light">
+              {weekday.format(date)}
+            </p>
+            <h3 className="text-lg text-primary">{concert.title}</h3>
+            {concert.venue && (
+              <p className="text-sm font-medium text-accent">{concert.venue}</p>
+            )}
+            {(concert.doors || concert.start_time) && (
+              <div className="mt-1.5 space-y-0.5 text-base font-medium text-primary">
+                {concert.doors && <p>Dørene åpner {concert.doors}</p>}
+                {concert.start_time && <p>Konserten starter {concert.start_time}</p>}
+              </div>
+            )}
+            {concert.description && (
+              <LinkedText
+                text={concert.description}
+                className="mt-1 whitespace-pre-line text-sm text-ink-light"
+              />
+            )}
+          </div>
         </div>
-        <div>
-          <p className="text-xs uppercase tracking-wider text-ink-light">
-            {weekday.format(date)}
-          </p>
-          <h3 className="text-lg text-primary">{concert.title}</h3>
-          {concert.venue && (
-            <p className="text-sm font-medium text-accent">{concert.venue}</p>
-          )}
-          {(concert.doors || concert.start_time) && (
-            <div className="mt-1.5 space-y-0.5 text-base font-medium text-primary">
-              {concert.doors && <p>Dørene åpner {concert.doors}</p>}
-              {concert.start_time && <p>Konserten starter {concert.start_time}</p>}
-            </div>
-          )}
-          {concert.description && (
-            <LinkedText
-              text={concert.description}
-              className="mt-1 whitespace-pre-line text-sm text-ink-light"
-            />
-          )}
-          {(concert.ticket_url || concert.article_url) && (
-            <div className="mt-4 flex flex-wrap items-center gap-3">
-              {concert.ticket_url && (
-                <Button
-                  href={concert.ticket_url}
-                  variant="primary"
-                  target="_blank"
-                  rel="noreferrer noopener"
-                >
-                  {concert.ticket_label || 'Bestill billett her'}
-                </Button>
+
+        {concert.ticket_url && (
+          <div className="mt-4">
+            <Button
+              href={concert.ticket_url}
+              variant="primary"
+              target="_blank"
+              rel="noreferrer noopener"
+            >
+              {concert.ticket_label || 'Bestill billett her'}
+            </Button>
+          </div>
+        )}
+
+        {concert.article_url && (
+          <div className="mt-6 border-t border-primary/10 pt-6">
+            {concert.article_image && (
+              <ZoomableImage
+                src={concert.article_image}
+                alt={concert.article_title || 'Artikkel'}
+                className="aspect-video overflow-hidden rounded-xl"
+                imgClassName="h-full w-full object-cover transition-transform duration-500 hover:scale-105"
+              />
+            )}
+            {concert.article_title && (
+              <h4 className="mt-3 text-base font-medium text-primary">{concert.article_title}</h4>
+            )}
+            <a
+              href={concert.article_url}
+              target="_blank"
+              rel="noreferrer noopener"
+              className="mt-3 inline-flex items-center gap-2 text-sm font-medium text-accent hover:text-primary transition-colors"
+            >
+              <span>Les mer</span>
+              {isBypatrioten && (
+                <img
+                  src="/bypatrioten-logo.svg"
+                  alt="Bypatrioten"
+                  className="h-4 w-auto"
+                />
               )}
-              {concert.article_url && (
-                <a
-                  href={concert.article_url}
-                  target="_blank"
-                  rel="noreferrer noopener"
-                  className="inline-flex items-center gap-2 rounded-xl border border-primary/15 bg-warm px-4 py-2.5 text-sm font-medium text-primary transition-colors hover:border-primary/30"
-                >
-                  <span>
-                    {concert.article_label ||
-                      (isBypatrioten ? 'Les omtalen hos' : 'Les omtalen')}
-                  </span>
-                  {isBypatrioten ? (
-                    <img
-                      src="/bypatrioten-logo.svg"
-                      alt="Bypatrioten"
-                      className="h-5 w-auto"
-                    />
-                  ) : (
-                    <span aria-hidden>→</span>
-                  )}
-                </a>
-              )}
-            </div>
-          )}
-        </div>
+            </a>
+          </div>
+        )}
       </div>
     </div>
   )

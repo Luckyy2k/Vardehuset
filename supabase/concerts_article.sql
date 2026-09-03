@@ -5,7 +5,8 @@
 
 alter table concerts
   add column if not exists article_url text,
-  add column if not exists article_label text;
+  add column if not exists article_title text,
+  add column if not exists article_image text;
 
 -- Koble Bypatrioten-artikkelen til jubileumskonserten som allerede ligger inne.
 update concerts
