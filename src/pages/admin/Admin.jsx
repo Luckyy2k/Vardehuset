@@ -42,7 +42,8 @@ function Section({ active }) {
             { key: 'ticket_label', label: 'Tekst på billettknapp (standard: Bestill billett her)' },
             { key: 'article_url', label: 'Artikkellink, f.eks. omtale hos Bypatrioten (valgfri)' },
             { key: 'article_title', label: 'Artikkeloverskrift' },
-            { key: 'article_image', label: 'Artikkelens bilde URL eller upload' },
+            { key: 'article_excerpt', label: 'Kort tekst fra artikkelen', type: 'textarea' },
+            { key: 'article_image', label: 'Bilde til artikkelkortet', type: 'image', folder: 'konserter' },
             { key: 'image', label: 'Bilde', type: 'image', folder: 'konserter' },
           ]}
         />

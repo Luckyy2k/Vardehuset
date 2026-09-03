@@ -11,7 +11,9 @@ export const concerts = [
     start_time: 'kl. 19.00',
     article_url: 'https://bypatrioten.com/nyheter/mannskoret-varde-hedret/',
     article_title: 'Mannskoret Varde hedret',
-    article_image: 'https://bypatrioten.com/wp-content/uploads/2026/08/varde-scaled.jpg',
+    article_excerpt:
+      'Etter 100 år med sang fikk Mannskoret Varde hederspris og 10 000 kroner fra Sparebanken Møre under BraBy-konferansen.',
+    article_image: '/images/konserter/bypatrioten-varde-hedret.jpg',
   },
   {
     id: 2,
