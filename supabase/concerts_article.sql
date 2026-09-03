@@ -7,8 +7,7 @@ alter table concerts
   add column if not exists article_url text,
   add column if not exists article_label text;
 
--- Koble Bypatrioten-omtalen til jubileumskonserten som allerede ligger inne.
+-- Koble Bypatrioten-artikkelen til jubileumskonserten som allerede ligger inne.
 update concerts
-set article_url = 'https://bypatrioten.com/event/mannskoret-varde-100ars-jubileumskonsert/'
-where title ilike '%jubileum%'
-  and (article_url is null or article_url = '');
+set article_url = 'https://bypatrioten.com/nyheter/mannskoret-varde-hedret/'
+where title ilike '%jubileum%';
