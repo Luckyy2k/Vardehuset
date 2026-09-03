@@ -15,6 +15,7 @@ const weekday = new Intl.DateTimeFormat('no-NO', { weekday: 'long' })
 
 function ConcertCard({ concert, muted }) {
   const date = new Date(concert.date)
+  const isBypatrioten = /bypatrioten\./i.test(concert.article_url || '')
   return (
     <div
       className={`overflow-hidden rounded-2xl border ${
@@ -54,16 +55,40 @@ function ConcertCard({ concert, muted }) {
               className="mt-1 whitespace-pre-line text-sm text-ink-light"
             />
           )}
-          {concert.ticket_url && (
-            <div className="mt-4">
-              <Button
-                href={concert.ticket_url}
-                variant="primary"
-                target="_blank"
-                rel="noreferrer noopener"
-              >
-                {concert.ticket_label || 'Bestill billett her'}
-              </Button>
+          {(concert.ticket_url || concert.article_url) && (
+            <div className="mt-4 flex flex-wrap items-center gap-3">
+              {concert.ticket_url && (
+                <Button
+                  href={concert.ticket_url}
+                  variant="primary"
+                  target="_blank"
+                  rel="noreferrer noopener"
+                >
+                  {concert.ticket_label || 'Bestill billett her'}
+                </Button>
+              )}
+              {concert.article_url && (
+                <a
+                  href={concert.article_url}
+                  target="_blank"
+                  rel="noreferrer noopener"
+                  className="inline-flex items-center gap-2 rounded-xl border border-primary/15 bg-warm px-4 py-2.5 text-sm font-medium text-primary transition-colors hover:border-primary/30"
+                >
+                  <span>
+                    {concert.article_label ||
+                      (isBypatrioten ? 'Les omtalen hos' : 'Les omtalen')}
+                  </span>
+                  {isBypatrioten ? (
+                    <img
+                      src="/bypatrioten-logo.svg"
+                      alt="Bypatrioten"
+                      className="h-5 w-auto"
+                    />
+                  ) : (
+                    <span aria-hidden>→</span>
+                  )}
+                </a>
+              )}
             </div>
           )}
         </div>

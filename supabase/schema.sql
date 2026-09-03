@@ -42,6 +42,8 @@ create table if not exists public.concerts (
   description text,
   ticket_url text,    -- lenke for billettknappen
   ticket_label text,  -- tekst på billettknappen (tom = "Bestill billett her")
+  article_url text,   -- lenke til artikkel/omtale, f.eks. hos Bypatrioten
+  article_label text, -- tekst på artikkellenken (tom = "Les omtalen")
   image text,
   created_at timestamptz not null default now()
 );

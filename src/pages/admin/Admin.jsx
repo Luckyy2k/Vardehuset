@@ -40,6 +40,8 @@ function Section({ active }) {
             { key: 'description', label: 'Beskrivelse', type: 'textarea' },
             { key: 'ticket_url', label: 'Billettlink (valgfri)' },
             { key: 'ticket_label', label: 'Tekst på billettknapp (standard: Bestill billett her)' },
+            { key: 'article_url', label: 'Artikkellink, f.eks. omtale hos Bypatrioten (valgfri)' },
+            { key: 'article_label', label: 'Tekst på artikkellenke (standard: Les omtalen)' },
             { key: 'image', label: 'Bilde', type: 'image', folder: 'konserter' },
           ]}
         />

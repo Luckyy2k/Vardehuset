@@ -6,6 +6,8 @@ export const concerts = [
     date: '2026-10-01',
     venue: 'Sobra Scene',
     description: 'Mannskoret Varde inviterer til jubileumskonsert.',
+    article_url:
+      'https://bypatrioten.com/event/mannskoret-varde-100ars-jubileumskonsert/',
   },
   {
     id: 2,
