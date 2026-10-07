@@ -35,6 +35,7 @@ export const nav = [
     to: '/mannskoret',
     links: [
       { label: 'Om Mannskoret', to: '/mannskoret' },
+      { label: 'Historie', to: '/historie' },
       { label: 'Konserter', to: '/konserter' },
       { label: 'Styret', to: '/styret' },
       { label: 'Medlemmer', to: '/medlemmer' },

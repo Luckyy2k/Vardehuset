@@ -1,6 +1,8 @@
 import { useEffect, useMemo, useState } from 'react'
 import { supabase } from '../../lib/supabase'
 import { contentGroups, contentDefaults } from '../../data/content'
+import ImageField from './ImageField'
+import FileField from './FileField'
 
 const inputClass =
   'mt-1 w-full rounded-lg border border-primary/15 px-3 py-2 text-sm outline-none focus:border-accent focus:ring-2 focus:ring-accent/20'
@@ -106,7 +108,8 @@ export default function ContentAdmin() {
         <div>
           <h2 className="text-2xl">Tekster</h2>
           <p className="mt-1 text-sm text-ink-light">
-            Rediger tekstene som vises på nettsiden. Tomt felt bruker standardteksten.
+            Rediger tekster, bilder og dokumenter som vises på nettsiden. Tomt felt bruker
+            standarden.
           </p>
         </div>
         <div className="flex items-center gap-3">
@@ -150,10 +153,13 @@ export default function ContentAdmin() {
               {open && (
                 <div className="grid gap-5 border-t border-primary/10 px-6 py-6 sm:grid-cols-2">
                   {group.fields.map((f) => {
-                    const isWide = f.type === 'textarea' || f.type === 'multiline'
+                    const isUpload = f.type === 'image' || f.type === 'pdf'
+                    const isWide = f.type === 'textarea' || f.type === 'multiline' || isUpload
                     const changed = dirtyKeys.includes(f.key)
+                    // Opplastingsfelt har egne knapper, så de pakkes ikke i <label>.
+                    const Wrapper = isUpload ? 'div' : 'label'
                     return (
-                      <label
+                      <Wrapper
                         key={f.key}
                         className={`block text-sm ${isWide ? 'sm:col-span-2' : ''}`}
                       >
@@ -169,7 +175,19 @@ export default function ContentAdmin() {
                             </button>
                           )}
                         </span>
-                        {isWide ? (
+                        {f.type === 'image' ? (
+                          <ImageField
+                            value={values[f.key] ?? ''}
+                            onChange={(url) => setField(f.key, url)}
+                            folder={f.folder || 'uploads'}
+                          />
+                        ) : f.type === 'pdf' ? (
+                          <FileField
+                            value={values[f.key] ?? ''}
+                            onChange={(url) => setField(f.key, url)}
+                            folder={f.folder || 'uploads'}
+                          />
+                        ) : isWide ? (
                           <textarea
                             rows={f.type === 'multiline' ? 6 : 3}
                             value={values[f.key] ?? ''}
@@ -188,7 +206,12 @@ export default function ContentAdmin() {
                             Skill avsnitt med en tom linje.
                           </span>
                         )}
-                      </label>
+                        {isUpload && (
+                          <span className="mt-1 block text-xs text-ink-light">
+                            Husk å trykke «Lagre endringer» etter opplasting.
+                          </span>
+                        )}
+                      </Wrapper>
                     )
                   })}
                 </div>

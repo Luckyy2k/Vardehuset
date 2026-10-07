@@ -9,6 +9,8 @@
 //   - (ingen)      → enkel tekstlinje
 //   - 'textarea'   → flerlinjes tekst (én verdi)
 //   - 'multiline'  → avsnitt; skill avsnitt med tom linje
+//   - 'image'      → bilde som lastes opp i admin (verdien er en URL)
+//   - 'pdf'        → PDF-dokument som lastes opp i admin (verdien er en URL)
 
 export const contentGroups = [
   {
@@ -218,6 +220,13 @@ export const contentGroups = [
       { key: 'styret.hero.eyebrow', label: 'Topp – stikkord', default: 'Mannskoret Varde' },
       { key: 'styret.hero.title', label: 'Topp – tittel', default: 'Styret' },
       {
+        key: 'styret.photo.image',
+        label: 'Bilde av styret',
+        type: 'image',
+        folder: 'styret',
+        default: '/images/historie/styret-2025.png',
+      },
+      {
         key: 'styret.photo.caption',
         label: 'Bildetekst',
         type: 'textarea',
@@ -232,6 +241,38 @@ export const contentGroups = [
         default:
           'Ta gjerne kontakt med en av styremedlemmene for spørsmål om Mannskoret Varde.',
       },
+    ],
+  },
+  {
+    page: 'Vardes historie',
+    fields: [
+      { key: 'historie.hero.eyebrow', label: 'Topp – stikkord', default: 'Mannskoret Varde' },
+      { key: 'historie.hero.title', label: 'Topp – tittel', default: 'Vardes historie' },
+      {
+        key: 'historie.hero.intro',
+        label: 'Topp – ingress',
+        type: 'textarea',
+        default: 'Historien om Mannskoret Varde – fra starten i 1926 og fram til i dag.',
+      },
+      { key: 'historie.body.eyebrow', label: 'Tekst – stikkord', default: 'Vår historie' },
+      { key: 'historie.body.title', label: 'Tekst – tittel', default: '100 år med sangglede' },
+      {
+        key: 'historie.body.text',
+        label: 'Tekst',
+        type: 'multiline',
+        default: [
+          'Mannskoret Varde har i dag 47 sangglade medlemmer og feirer sitt 100-års jubileum i 2026.',
+          'MK Varde er stolt over å ha vært det offisielle Shantykoret under «Cutty Sark» i 2001 (Ålesund) og 2008 (Måløy) og «Tall Ships Races» i 2015 (Ålesund).',
+        ].join('\n\n'),
+      },
+      { key: 'historie.pdf.title', label: 'Dokument – tittel', default: 'Les hele historien' },
+      {
+        key: 'historie.pdf.intro',
+        label: 'Dokument – ingress',
+        type: 'textarea',
+        default: 'Her kan du lese eller laste ned historien om Mannskoret Varde.',
+      },
+      { key: 'historie.pdf.file', label: 'Dokument – PDF-fil', type: 'pdf', folder: 'historie', default: '' },
     ],
   },
   {

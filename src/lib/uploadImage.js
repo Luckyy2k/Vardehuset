@@ -6,7 +6,11 @@ const BUCKET = 'media'
 // Laster opp en fil til Supabase Storage og returnerer offentlig URL.
 // Bildet komprimeres i nettleseren først, så galleriene holder seg raske.
 export async function uploadImage(file, folder = 'uploads') {
-  const upload = await compressImage(file)
+  return uploadFile(await compressImage(file), folder)
+}
+
+// Laster opp en fil uendret (f.eks. PDF) og returnerer offentlig URL.
+export async function uploadFile(upload, folder = 'uploads') {
   const ext = upload.name.includes('.') ? upload.name.split('.').pop() : 'jpg'
   const safeExt = ext.toLowerCase().replace(/[^a-z0-9]/g, '') || 'jpg'
   const path = `${folder}/${crypto.randomUUID()}.${safeExt}`

@@ -29,8 +29,8 @@ export default function Styret() {
         <div className="container-page py-16">
           <figure className="mx-auto max-w-3xl">
             <ZoomableImage
-              src="/images/historie/styret-2025.png"
-              alt="Styret 2025"
+              src={t('styret.photo.image')}
+              alt="Styret i Mannskoret Varde"
               className="overflow-hidden rounded-2xl shadow-sm"
               imgClassName="w-full object-cover"
             />

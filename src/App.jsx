@@ -10,6 +10,7 @@ import Kalender from './pages/Kalender'
 import Sponsorer from './pages/Sponsorer'
 import Foresporsel from './pages/Foresporsel'
 import Mannskoret from './pages/Mannskoret'
+import Historie from './pages/Historie'
 import Konserter from './pages/Konserter'
 import Styret from './pages/Styret'
 import Medlemmer from './pages/Medlemmer'
@@ -31,6 +32,7 @@ export default function App() {
           <Route path="sponsorer" element={<Sponsorer />} />
           <Route path="foresporsel" element={<Foresporsel />} />
           <Route path="mannskoret" element={<Mannskoret />} />
+          <Route path="historie" element={<Historie />} />
           <Route path="konserter" element={<Konserter />} />
           <Route path="styret" element={<Styret />} />
           <Route path="medlemmer" element={<Medlemmer />} />
