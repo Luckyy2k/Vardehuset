@@ -53,8 +53,21 @@ export default function Footer() {
       </div>
 
       <div className="border-t border-white/10">
-        <div className="container-page py-5 text-center text-xs text-white/50">
-          © {new Date().getFullYear()} {site.name}. Alle rettigheter reservert.
+        <div className="container-page flex flex-col items-center gap-2 py-5 text-center text-xs text-white/50 sm:flex-row sm:justify-between sm:text-left">
+          <p>
+            © {new Date().getFullYear()} {site.name}. Alle rettigheter reservert.
+          </p>
+          <p>
+            Utviklet av{' '}
+            <a
+              href="https://halslisystemer.no"
+              target="_blank"
+              rel="noreferrer"
+              className="font-medium tracking-wide text-white/70 transition-colors hover:text-white"
+            >
+              HALSLI
+            </a>
+          </p>
         </div>
       </div>
     </footer>
