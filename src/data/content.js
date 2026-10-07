@@ -254,17 +254,6 @@ export const contentGroups = [
         type: 'textarea',
         default: 'Historien om Mannskoret Varde – fra starten i 1926 og fram til i dag.',
       },
-      { key: 'historie.body.eyebrow', label: 'Tekst – stikkord', default: 'Vår historie' },
-      { key: 'historie.body.title', label: 'Tekst – tittel', default: '100 år med sangglede' },
-      {
-        key: 'historie.body.text',
-        label: 'Tekst',
-        type: 'multiline',
-        default: [
-          'Mannskoret Varde har i dag 47 sangglade medlemmer og feirer sitt 100-års jubileum i 2026.',
-          'MK Varde er stolt over å ha vært det offisielle Shantykoret under «Cutty Sark» i 2001 (Ålesund) og 2008 (Måløy) og «Tall Ships Races» i 2015 (Ålesund).',
-        ].join('\n\n'),
-      },
       { key: 'historie.pdf.title', label: 'Dokument – tittel', default: 'Les hele historien' },
       {
         key: 'historie.pdf.intro',

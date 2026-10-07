@@ -1,7 +1,7 @@
 import PageHero from '../components/PageHero'
 import SectionHeading from '../components/SectionHeading'
 import Button from '../components/Button'
-import { useContent, paragraphs } from '../lib/useContent'
+import { useContent } from '../lib/useContent'
 
 export default function Historie() {
   const t = useContent()
@@ -14,17 +14,6 @@ export default function Historie() {
         title={t('historie.hero.title')}
         intro={t('historie.hero.intro')}
       />
-
-      <section className="bg-white">
-        <div className="container-page py-20">
-          <SectionHeading eyebrow={t('historie.body.eyebrow')} title={t('historie.body.title')} />
-          <div className="mt-6 max-w-3xl space-y-4 text-ink-light">
-            {paragraphs(t('historie.body.text')).map((p, i) => (
-              <p key={i}>{p}</p>
-            ))}
-          </div>
-        </div>
-      </section>
 
       {pdf && (
         <section className="bg-warm">
