@@ -1,6 +1,6 @@
 export const choirStats = [
   { value: '100', label: 'år med sanglede' },
-  { value: '47', label: 'medlemmer' },
+  { value: '46', label: 'medlemmer' },
   { value: '2026', label: '100-års jubileum' },
   { value: '2000', label: 'med Walter Stiegler' },
 ]
@@ -8,7 +8,7 @@ export const choirStats = [
 export const choirHistory = {
   title: '100 år med sangglede',
   paragraphs: [
-    'Mannskoret Varde har i dag 47 sangglade medlemmer og feirer sitt 100-års jubileum i 2026.',
+    'Mannskoret Varde har i dag 46 sangglade medlemmer og feirer sitt 100-års jubileum i 2026.',
     'I de senere år har MK Varde gjennomført en rekke kabaret-forestillinger i sitt eget kulturhus. Som en oppvarming til «Tall Ships Races» i juli 2015 ble Shanty-kabareten «Heis Seil med Varde» gjennomført med fire forestillinger i februar–mars samme år.',
     'MK Varde er stolt over å ha vært det offisielle Shantykoret under «Cutty Sark» i 2001 (Ålesund) og 2008 (Måløy) og «Tall Ships Races» i 2015 (Ålesund).',
   ],
