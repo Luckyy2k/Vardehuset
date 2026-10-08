@@ -16,7 +16,9 @@ export default function PdfViewer({ src, title, downloadLabel = 'Last ned PDF' }
   // Last dokumentet
   useEffect(() => {
     let cancelled = false
-    let loaded = null
+    // Lastejobben eier dokumentet. I pdf.js v6 er det den som har destroy(),
+    // ikke selve dokumentet, og den avbryter også en nedlasting som pågår.
+    let task = null
     ;(async () => {
       try {
         const pdfjs = await import('pdfjs-dist')
@@ -24,7 +26,9 @@ export default function PdfViewer({ src, title, downloadLabel = 'Last ned PDF' }
           'pdfjs-dist/build/pdf.worker.min.mjs',
           import.meta.url,
         ).toString()
-        loaded = await pdfjs.getDocument({ url: src }).promise
+        if (cancelled) return
+        task = pdfjs.getDocument({ url: src })
+        const loaded = await task.promise
         if (cancelled) return
         const first = await loaded.getPage(1)
         const vp = first.getViewport({ scale: 1 })
@@ -39,7 +43,7 @@ export default function PdfViewer({ src, title, downloadLabel = 'Last ned PDF' }
     })()
     return () => {
       cancelled = true
-      loaded?.destroy()
+      task?.destroy().catch(() => {})
     }
   }, [src])
 
