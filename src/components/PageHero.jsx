@@ -1,4 +1,4 @@
-export default function PageHero({ eyebrow, title, intro }) {
+export default function PageHero({ eyebrow, title, intro, children }) {
   return (
     <section className="bg-gradient-to-br from-primary to-accent">
       <div className="container-page pb-20 pt-32 text-center sm:pb-28 sm:pt-40">
@@ -11,6 +11,7 @@ export default function PageHero({ eyebrow, title, intro }) {
         {intro && (
           <p className="mx-auto mt-5 max-w-2xl text-lg text-white/75">{intro}</p>
         )}
+        {children}
       </div>
     </section>
   )

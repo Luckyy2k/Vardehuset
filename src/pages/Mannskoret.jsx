@@ -13,7 +13,15 @@ export default function Mannskoret() {
         eyebrow={t('mannskoret.hero.eyebrow')}
         title={t('mannskoret.hero.title')}
         intro={t('mannskoret.hero.intro')}
-      />
+      >
+        <ZoomableImage
+          src="/images/mannskoret/mannskoret-varde.jpg"
+          alt="Gruppebilde av Mannskoret Varde"
+          className="mt-10 overflow-hidden rounded-2xl shadow-sm sm:mt-12"
+          imgClassName="aspect-[5187/2877] h-auto w-full object-contain"
+          loading="eager"
+        />
+      </PageHero>
 
       {/* Statistikk */}
       <section className="bg-primary">
