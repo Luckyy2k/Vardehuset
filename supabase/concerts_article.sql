@@ -3,9 +3,9 @@
 -- article_title   = overskriften på kortet
 -- article_excerpt = kort tekst fra artikkelen
 -- article_image   = bildet på kortet
--- VALGFRITT: omtalen for jubileumskonserten ligger allerede i koden
--- (src/data/articles.js) og vises uten denne migrasjonen. Kjør denne kun
--- dersom dere vil kunne redigere omtaler fra admin-panelet.
+-- PÅKREVD: admin-skjemaet for konserter sender alltid disse feltene. Uten
+-- kolonnene feiler både redigering og nye konserter med
+-- "Could not find the 'article_excerpt' column of 'concerts' in the schema cache".
 -- Kjøres i Supabase SQL Editor.
 
 alter table concerts
@@ -24,3 +24,6 @@ set article_url = 'https://bypatrioten.com/nyheter/mannskoret-varde-hedret/',
     article_excerpt = 'Etter 100 år med sang fikk Mannskoret Varde hederspris og 10 000 kroner fra Sparebanken Møre under BraBy-konferansen.',
     article_image = '/images/konserter/bypatrioten-varde-hedret.jpg'
 where title ilike '%jubileum%';
+
+-- Be API-et lese databaseskjemaet på nytt, så de nye kolonnene kan brukes med en gang.
+notify pgrst, 'reload schema';
