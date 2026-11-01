@@ -42,6 +42,8 @@ create table if not exists public.concerts (
   description text,
   ticket_url text,    -- lenke for billettknappen
   ticket_label text,   -- tekst på billettknappen (tom = "Bestill billett her")
+  price text,          -- pris, f.eks. "300" eller "kr 300 / 250 for honnør"
+  kids_free boolean not null default false, -- barn under 12 år gratis
   article_url text,     -- lenke til artikkel/omtale, f.eks. hos Bypatrioten
   article_title text,   -- overskrift på artikkelkortet
   article_excerpt text, -- kort tekst fra artikkelen

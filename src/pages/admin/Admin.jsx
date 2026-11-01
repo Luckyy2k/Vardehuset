@@ -37,6 +37,13 @@ function Section({ active }) {
             { key: 'venue', label: 'Sted' },
             { key: 'doors', label: 'Dørene åpner (f.eks. kl. 18:30)' },
             { key: 'start_time', label: 'Konserten starter (f.eks. kl. 19:00)' },
+            { key: 'price', label: 'Pris (f.eks. 300 eller kr 300 / 250 for honnør)' },
+            {
+              key: 'kids_free',
+              label: 'Barn',
+              type: 'checkbox',
+              checkboxLabel: 'Barn under 12 år gratis',
+            },
             { key: 'description', label: 'Beskrivelse', type: 'textarea' },
             { key: 'ticket_url', label: 'Billettlink (valgfri)' },
             { key: 'ticket_label', label: 'Tekst på billettknapp (standard: Bestill billett her)' },

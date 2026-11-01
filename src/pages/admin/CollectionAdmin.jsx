@@ -6,7 +6,16 @@ const inputClass =
   'mt-1 w-full rounded-lg border border-primary/15 px-3 py-2 text-sm outline-none focus:border-accent focus:ring-2 focus:ring-accent/20'
 
 function blank(fields) {
-  return Object.fromEntries(fields.map((f) => [f.key, '']))
+  return Object.fromEntries(fields.map((f) => [f.key, f.type === 'checkbox' ? false : '']))
+}
+
+// Gjør Supabase-feil om til en melding admin-brukeren kan handle på.
+function friendlyError(message) {
+  const missing = /Could not find the '([^']+)' column of '([^']+)'/.exec(message || '')
+  if (missing) {
+    return `Databasen mangler feltet «${missing[1]}» i tabellen «${missing[2]}». En databaseoppdatering må kjøres i Supabase før dette kan lagres. Kontakt utvikleren.`
+  }
+  return message
 }
 
 export default function CollectionAdmin({ table, title, fields, orderBy = 'id' }) {
@@ -51,6 +60,7 @@ export default function CollectionAdmin({ table, title, fields, orderBy = 'id' }
     for (const f of fields) {
       let v = form[f.key]
       if (f.type === 'number') v = v === '' ? null : Number(v)
+      if (f.type === 'checkbox') v = Boolean(v)
       payload[f.key] = v
     }
 
@@ -61,7 +71,7 @@ export default function CollectionAdmin({ table, title, fields, orderBy = 'id' }
       res = await supabase.from(table).update(payload).eq('id', editing)
     }
     if (res.error) {
-      setError(res.error.message)
+      setError(friendlyError(res.error.message))
       return
     }
     setEditing(null)
@@ -97,7 +107,17 @@ export default function CollectionAdmin({ table, title, fields, orderBy = 'id' }
               className={`block text-sm ${f.type === 'textarea' || f.type === 'image' ? 'sm:col-span-2' : ''}`}
             >
               <span className="font-medium text-primary">{f.label}</span>
-              {f.type === 'image' ? (
+              {f.type === 'checkbox' ? (
+                <span className="mt-2 flex items-center gap-2.5">
+                  <input
+                    type="checkbox"
+                    checked={Boolean(form[f.key])}
+                    onChange={(e) => setForm((s) => ({ ...s, [f.key]: e.target.checked }))}
+                    className="h-4 w-4 rounded border-primary/30 accent-accent"
+                  />
+                  <span className="text-ink-light">{f.checkboxLabel || 'Ja'}</span>
+                </span>
+              ) : f.type === 'image' ? (
                 <ImageField
                   value={form[f.key] ?? ''}
                   onChange={(url) => setForm((s) => ({ ...s, [f.key]: url }))}

@@ -14,6 +14,12 @@ const fmt = new Intl.DateTimeFormat('no-NO', {
 })
 const weekday = new Intl.DateTimeFormat('no-NO', { weekday: 'long' })
 
+// "300" → "kr 300". Tekst som allerede har valuta eller ord beholdes som den er.
+function formatPrice(price) {
+  const p = String(price).trim()
+  return /^\d[\d\s.,]*(,-)?$/.test(p) ? `kr ${p}` : p
+}
+
 function ConcertCard({ concert, muted }) {
   const date = new Date(concert.date)
   return (
@@ -47,6 +53,20 @@ function ConcertCard({ concert, muted }) {
             <div className="mt-1.5 space-y-0.5 text-base font-medium text-primary">
               {concert.doors && <p>Dørene åpner {concert.doors}</p>}
               {concert.start_time && <p>Konserten starter {concert.start_time}</p>}
+            </div>
+          )}
+          {(concert.price || concert.kids_free) && (
+            <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1.5">
+              {concert.price && (
+                <p className="text-base font-medium text-primary">
+                  Pris: {formatPrice(concert.price)}
+                </p>
+              )}
+              {concert.kids_free && (
+                <span className="rounded-full bg-accent/10 px-3 py-0.5 text-sm font-medium text-accent">
+                  Barn under 12 år gratis
+                </span>
+              )}
             </div>
           )}
           {concert.description && (
